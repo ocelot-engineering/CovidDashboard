@@ -20,8 +20,8 @@
 ├── renv.lock             <- describes the state of the project library
 ├── scripts               <- Scripts to be run outside of the application
 ├── tests                 <- Test related files and scripts
-|   ├── cypress           <- JavaScript end to end testing   
-|   ├── testthat          <- R unit testing
-|   └── testthat.R        <- Run R unit testing
+│   ├── cypress           <- JavaScript end to end testing   
+│   ├── testthat          <- R unit testing
+│   └── testthat.R        <- Run R unit testing
 └── www                   <- javascript and css files
 ```
