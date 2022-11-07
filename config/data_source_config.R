@@ -14,6 +14,7 @@ output_dir <- 'data/'
 
 daily_cases = list(
     url = paste0(base_url, 'WHO-COVID-19-global-data.csv')
+  , output_path = paste0(output_dir, 'daily_cases.rds')
   , col_types = readr::cols(
       Date_reported     = readr::col_date(format = '%Y-%m-%d')
     , Country_code      = readr::col_character()
@@ -28,6 +29,7 @@ daily_cases = list(
 
 vaccination = list(
     url = paste0(base_url, 'who-data/vaccination-data.csv')
+  , output_path = paste0(output_dir, 'vaccination.rds')
   , col_types = readr::cols(
       COUNTRY                              = readr::col_character()
     , ISO3                                 = readr::col_character()

@@ -46,9 +46,9 @@ refresh_dataset_from_config <- function(data_config) {
     checkmate::assert_list(data_config)
     
     refresh_dataset(
-        url         = dataset_config$url
-      , col_types   = dataset_config$col_types 
-      , output_path = dataset_config$output_path
+        url         = data_config$url
+      , col_types   = data_config$col_types 
+      , output_path = data_config$output_path
     )
     
     return(invisible())
@@ -67,17 +67,22 @@ refresh_dataset_from_config <- function(data_config) {
 refresh_dataset <- function(url, col_types, output_path) {
     checkmate::assert_string(url)
     checkmate::assert_class(col_types, "col_spec")
-    checkmate::assert_path_for_output(output_path, overwrite = TRUE, extension = '.rds')
+    checkmate::assert_path_for_output(output_path, overwrite = TRUE, extension = 'rds')
+    
+    message('Preparing ', basename(output_path))
     
     # Check for previous files and backup
     if (file.exists(output_path)) {
         bu_file_path <- generate_backup_path(output_path)
-        file.rename(from = path, to = bu_file_path)
+        file.rename(from = output_path, to = bu_file_path)
     }
     
     # Read data from url and clean up col names
     dat <- readr::read_csv(url, col_types = col_types)
     colnames(dat) <- toupper(colnames(dat))
+    
+    # TODO: validating data
+    # if (new_data_is_invalid) { rollback to backup}
     
     # Write data as RDS to retain tibble information
     readr::write_rds(x = dat, file = output_path, compress = "none")
