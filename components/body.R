@@ -9,7 +9,7 @@ bodyUI <- function(id) {
     
     body <- shinydashboard::dashboardBody(
         tabItems(
-            tabItem(tabName = "overview"     , h2("Overview")),
+            tabItem(tabName = "overview"     , overviewUI("page_overview")),
             tabItem(tabName = "country_comp" , h2("Compare")),
             tabItem(tabName = "data_explorer", h2("Data")),
             tabItem(tabName = "world_map"    , h2("Map")),
@@ -26,6 +26,7 @@ bodyUI <- function(id) {
 bodyServer <- function(id) {
     module <- function(input, output, session) {
         # TODO: body server
+        overviewServer("page_overview")
     }
     
     return(moduleServer(id, module))

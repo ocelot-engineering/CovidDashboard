@@ -9,6 +9,7 @@ sidebarUI <- function(id) {
     
     sidebar <- shinydashboardPlus::dashboardSidebar(
         menuItemOutput(ns('menu'))
+      , tags$script(src = "sidebar_triggers.js")
     )
     
     return(sidebar)

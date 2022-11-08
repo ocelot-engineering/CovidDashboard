@@ -16,10 +16,15 @@ library(plotly)
 
 # Sources -----------------------------------------------------------------
 
+# Components
 source("components/header.R", local = TRUE)
 source("components/sidebar.R", local = TRUE)
 source("components/body.R", local = TRUE)
 source("components/controlbar.R", local = TRUE)
+
+# Pages
+source("pages/overview.R", local = TRUE)
+
 
 # Configuration -----------------------------------------------------------
 
