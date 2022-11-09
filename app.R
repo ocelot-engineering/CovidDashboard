@@ -12,6 +12,7 @@ library(shinydashboard)
 library(shinydashboardPlus)
 library(dplyr)
 library(readr)
+library(lubridate)
 library(plotly)
 
 # Sources -----------------------------------------------------------------
