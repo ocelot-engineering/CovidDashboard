@@ -10,7 +10,6 @@ headerUI <- function(id) {
     
     header <- shinydashboardPlus::dashboardHeader(
         title = "COVID-19 Dashboard"
-      , fixed = TRUE
       , dropdownMenuOutput(ns("notificationsMenu"))
     )
     

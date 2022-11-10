@@ -25,6 +25,14 @@ source("components/controlbar.R", local = TRUE)
 
 # Pages
 source("pages/overview.R", local = TRUE)
+source("pages/country_comp.R", local = TRUE)
+source("pages/data_explorer.R", local = TRUE)
+source("pages/world_map.R", local = TRUE)
+source("pages/simulations.R", local = TRUE)
+source("pages/vaccines.R", local = TRUE)
+source("pages/data_sources.R", local = TRUE)
+
+source("pages/under_construction.R", local = TRUE)
 
 
 # Configuration -----------------------------------------------------------

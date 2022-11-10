@@ -9,7 +9,7 @@ overviewUI <- function(id) {
     
     overview <- fluidPage(
         fluidRow(
-            column(width = 12, h2("Overview"))
+            column(width = 12, p("TODO"))
         ),
         fluidRow(
             column(width = 12, p("TODO"))
