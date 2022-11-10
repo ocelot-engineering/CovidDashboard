@@ -10,16 +10,6 @@
 
 #' Calculates the latest new case numbers
 #' 
-#' Note that this is the latest new case numbers for each country. Lets say you
-#' have Australia, Brazil and Chile. If Australia and Brazil are up-to-date and 
-#' have info for the Friday, but Chile's latest info is for the previous 
-#' Wednesday, the new case numbers will include Australia and Brazil's Friday 
-#' numbers as well as Brazil's Wednesday numbers.
-#' 
-#' This could cause new cases to "persist" until later information comes in, but 
-#' it prevents a sudden drop in case numbers due to lack of reporting. Hence the 
-#' reason to include the latest numbers instead of excluding that country.
-#' 
 #' @param daily_cases tibble: daily cases from WHO
 #' 
 #' @returns list: new_cases = latest number of new cases, total_cases: total confirmed
@@ -30,6 +20,8 @@
 #' daily_cases <- get_daily_cases()
 #' output <- calc_cases(daily_cases)
 #' }
+#' 
+#' @seealso `calc_new_and_total(daily_cases, new_col, total_col)`
 #' 
 calc_cases <- function(daily_cases) {
     checkmate::assert_tibble(daily_cases)
@@ -44,16 +36,6 @@ calc_cases <- function(daily_cases) {
 
 #' Calculates the latest new death numbers
 #' 
-#' Note that this is the latest new death numbers for each country. Lets say you
-#' have Australia, Brazil and Chile. If Australia and Brazil are up-to-date and 
-#' have info for the Friday, but Chile's latest info is for the previous 
-#' Wednesday, the new case numbers will include Australia and Brazil's Friday 
-#' numbers as well as Brazil's Wednesday numbers.
-#' 
-#' This could cause new cases to "persist" until later information comes in, but 
-#' it prevents a sudden drop in case numbers due to lack of reporting. Hence the 
-#' reason to include the latest numbers instead of excluding that country.
-#' 
 #' @param daily_cases tibble: daily cases from WHO
 #' 
 #' @returns list: new = latest number of new deaths, total: total confirmed
@@ -64,6 +46,8 @@ calc_cases <- function(daily_cases) {
 #' daily_cases <- get_daily_cases()
 #' output <- calc_deaths(daily_cases)
 #' }
+#' 
+#' @seealso `calc_new_and_total(daily_cases, new_col, total_col)`
 #' 
 calc_deaths <- function(daily_cases) {
     checkmate::assert_tibble(daily_cases)

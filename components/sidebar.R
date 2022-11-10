@@ -27,6 +27,7 @@ sidebarServer <- function(id) {
               , menuItem(text = "Country Comparison", tabName = "country_comp" , icon = shiny::icon("chart-column"))
               , menuItem(text = "Raw Data Explorer" , tabName = "data_explorer", icon = shiny::icon("table"))
               , menuItem(text = "World Map"         , tabName = "world_map"    , icon = shiny::icon("earth-americas"))
+              , menuItem(text = "Simulations"       , tabName = "simulations"  , icon = shiny::icon("circle-nodes"))
               , menuItem(text = "Resources"         , tabName = "resources"    , icon = shiny::icon("book"),
                          menuSubItem(text = 'Vaccines'    , tabName = 'vaccines'    , icon = shiny::icon("syringe")),
                          menuSubItem(text = 'Data Sources', tabName = 'data_sources', icon = shiny::icon("database"))

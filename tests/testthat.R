@@ -7,6 +7,12 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(CovidDashboard)
+# library(CovidDashboard)
 
-test_check("CovidDashboard")
+# test_check("CovidDashboard")
+
+test_dir(
+    "./tests/testthat",
+    env = shiny::loadSupport(),
+    reporter = c("progress", "fail")
+)
