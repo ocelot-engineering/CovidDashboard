@@ -17,22 +17,15 @@ library(plotly)
 
 # Sources -----------------------------------------------------------------
 
+# Functions
+source("R/enhanced_base_utilties.R", local = TRUE)
+source_dir(dir = "./R", local = TRUE)
+
 # Components
-source("components/header.R", local = TRUE)
-source("components/sidebar.R", local = TRUE)
-source("components/body.R", local = TRUE)
-source("components/controlbar.R", local = TRUE)
+source_dir(dir = "./components", local = TRUE)
 
 # Pages
-source("pages/overview.R", local = TRUE)
-source("pages/country_comp.R", local = TRUE)
-source("pages/data_explorer.R", local = TRUE)
-source("pages/world_map.R", local = TRUE)
-source("pages/simulations.R", local = TRUE)
-source("pages/vaccines.R", local = TRUE)
-source("pages/data_sources.R", local = TRUE)
-
-source("pages/under_construction.R", local = TRUE)
+source_dir(dir = "./pages", local = TRUE)
 
 
 # Configuration -----------------------------------------------------------

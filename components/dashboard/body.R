@@ -17,7 +17,10 @@ bodyUI <- function(id) {
             # tabItem(tabName = "resources"    , h2("Resources overview")),
             tabItem(tabName = "vaccines"     , vaccinesUI(ns("vaccines"))),
             tabItem(tabName = "data_sources" , dataSourcesUI(ns("data_sources")))
-            )
+            ),
+        tags$head(
+            tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+        )
     )
     
     return(body)
