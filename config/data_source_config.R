@@ -4,10 +4,12 @@
 # This script contains the location and schemas of the data sources
 #
 
+source("config/proj_config.R", local = TRUE)
+
 # Base URL ----------------------------------------------------------------
 
 base_url <- 'https://covid19.who.int/'
-output_dir <- 'data/'
+output_dir <- proj_config$data_path
 
 
 # Datasets and schemas ----------------------------------------------------

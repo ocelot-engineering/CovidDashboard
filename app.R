@@ -27,8 +27,9 @@ source_dir(dir = "./components", local = TRUE)
 # Pages
 source_dir(dir = "./pages", local = TRUE)
 
+# Configuration
+source_dir(dir = "./config", local = TRUE)
 
-# Configuration -----------------------------------------------------------
 
 
 # Application -------------------------------------------------------------

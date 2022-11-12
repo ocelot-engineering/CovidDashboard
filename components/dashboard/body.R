@@ -10,6 +10,7 @@ bodyUI <- function(id) {
     body <- shinydashboard::dashboardBody(style = "padding: 0px;",
         tabItems(
             tabItem(tabName = "overview"     , overviewUI(ns("page_overview"))),
+            tabItem(tabName = "news_feed"    , newsFeedUI(ns("news_feed"))),
             tabItem(tabName = "country_comp" , countryCompUI(ns("country_comp"))),
             tabItem(tabName = "data_explorer", dataExplorerUI(ns("data_explorer"))),
             tabItem(tabName = "world_map"    , worldMapUI(ns("world_map"))),
@@ -33,6 +34,7 @@ bodyServer <- function(id) {
         ns <- session$ns
         
         overviewServer("page_overview")
+        newsFeedServer("news_feed")
         countryCompServer("country_comp")
         dataExplorerServer("country_comp")
         worldMapServer("world_map")

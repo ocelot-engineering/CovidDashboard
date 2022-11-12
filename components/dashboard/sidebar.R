@@ -24,6 +24,7 @@ sidebarServer <- function(id) {
             sidebarMenu(
                 id = ns("sidebar_menu")
               , menuItem(text = "World Overview"    , tabName = "overview"     , icon = shiny::icon("dashboard"))
+              , menuItem(text = "News Feed"         , tabName = "news_feed"    , icon = shiny::icon("message"))
               , menuItem(text = "Country Comparison", tabName = "country_comp" , icon = shiny::icon("chart-column"))
               , menuItem(text = "Raw Data Explorer" , tabName = "data_explorer", icon = shiny::icon("table"))
               , menuItem(text = "World Map"         , tabName = "world_map"    , icon = shiny::icon("earth-americas"))

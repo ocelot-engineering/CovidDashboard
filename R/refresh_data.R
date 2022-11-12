@@ -1,6 +1,7 @@
 #
 # Refreshing the underlying data from WHO
 #
+# TODO: write tests
 
 
 #' Source and return the data source config object
@@ -40,14 +41,21 @@ refresh_all_data <- function() {
 #' 
 #' @param data_config A data source config, which is a list containing url and col_types.
 #' 
-#' @returns A numeric vector.
+#' @returns invisible NULL
 #' 
 refresh_dataset_from_config <- function(data_config) {
     checkmate::assert_list(data_config)
+    checkmate::assert_string(data_config$url)
+    checkmate::assert_class(data_config$col_types, "col_spec")
+    checkmate::assert_path_for_output(data_config$output_path, overwrite = TRUE, extension = 'rds')
     
+    # Read data from url and clean up col names
+    dat <- readr::read_csv(file = data_config$url, col_types = data_config$col_types)
+    colnames(dat) <- toupper(colnames(dat))
+    
+    # Refresh dataset
     refresh_dataset(
-        url         = data_config$url
-      , col_types   = data_config$col_types 
+        dat         = dat
       , output_path = data_config$output_path
     )
     
@@ -57,29 +65,23 @@ refresh_dataset_from_config <- function(data_config) {
 
 #' Refreshes a single dataset.
 #' 
-#' @param url string: a string representing a url to dataset. e.g. https://...data.csv.
-#' @param col_types col_spec: Types of columns for the specific dataset.
+#' @param dat tibble: df to be written
 #' @param output_path string: Path to write file to.
 #' 
-#' @returns A numeric vector.
+#' @returns invisible NULL
 #' @examples
 #' 
-refresh_dataset <- function(url, col_types, output_path) {
-    checkmate::assert_string(url)
-    checkmate::assert_class(col_types, "col_spec")
+refresh_dataset <- function(dat, output_path) {
+    checkmate::assert_tibble(dat)
     checkmate::assert_path_for_output(output_path, overwrite = TRUE, extension = 'rds')
     
     message('Preparing ', basename(output_path))
     
     # Check for previous files and backup
+    bu_file_path <- generate_backup_path(output_path)
     if (file.exists(output_path)) {
-        bu_file_path <- generate_backup_path(output_path)
         file.rename(from = output_path, to = bu_file_path)
     }
-    
-    # Read data from url and clean up col names
-    dat <- readr::read_csv(url, col_types = col_types)
-    colnames(dat) <- toupper(colnames(dat))
     
     # TODO: validating data
     # if (new_data_is_invalid) { rollback to backup}
@@ -107,5 +109,7 @@ generate_backup_path = function(path) {
     checkmate::assert_string(path)
     
     timestamp <- paste0(stringr::str_extract_all(Sys.time(), '\\d', simplify = TRUE), collapse ="")
-    return(paste0(dirname(path), '/bu_', timestamp, '_', basename(path)))
+    backup_path <- paste0(dirname(path), '/bu_', timestamp, '_', basename(path))
+    
+    return(backup_path)
 }
