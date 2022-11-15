@@ -15,6 +15,7 @@ library(readr)
 library(lubridate)
 library(plotly)
 library(forecast)
+library(purrr)
 
 # Sources -----------------------------------------------------------------
 
