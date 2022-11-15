@@ -14,6 +14,7 @@ library(dplyr)
 library(readr)
 library(lubridate)
 library(plotly)
+library(forecast)
 
 # Sources -----------------------------------------------------------------
 

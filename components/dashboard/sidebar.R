@@ -31,7 +31,8 @@ sidebarServer <- function(id) {
               , menuItem(text = "Simulations"       , tabName = "simulations"  , icon = shiny::icon("circle-nodes"))
               , menuItem(text = "Resources"         , tabName = "resources"    , icon = shiny::icon("book"),
                          menuSubItem(text = 'Vaccines'    , tabName = 'vaccines'    , icon = shiny::icon("syringe")),
-                         menuSubItem(text = 'Data Sources', tabName = 'data_sources', icon = shiny::icon("database"))
+                         menuSubItem(text = 'Data Sources', tabName = 'data_sources', icon = shiny::icon("database")),
+                         menuSubItem(text = 'Metrics'     , tabName = 'metrics', icon = shiny::icon("chart-simple"))
                          )
             )
         })

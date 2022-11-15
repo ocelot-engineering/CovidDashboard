@@ -2,11 +2,11 @@
 # Headline value box
 #
 
-headline_value_box <- function(subtitle, new_cases, total_cases, perc_inc, icon) {
+headline_value_box <- function(subtitle, new_cases, total_cases, perc_inc, icon, color = "light-blue") {
     value_box <- valueBox(
         value = format_num(new_cases), 
         icon = icon,
-        color = "olive",
+        color = color,
         subtitle = HTML(paste0(
             "<b>", subtitle, "</b>",
             "<br>",

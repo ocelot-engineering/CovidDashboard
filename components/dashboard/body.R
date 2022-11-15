@@ -17,7 +17,8 @@ bodyUI <- function(id) {
             tabItem(tabName = "simulations"  , simulationsUI(ns("simulations"))),
             # tabItem(tabName = "resources"    , h2("Resources overview")),
             tabItem(tabName = "vaccines"     , vaccinesUI(ns("vaccines"))),
-            tabItem(tabName = "data_sources" , dataSourcesUI(ns("data_sources")))
+            tabItem(tabName = "data_sources" , dataSourcesUI(ns("data_sources"))),
+            tabItem(tabName = "metrics"      , metricsUI(ns("metrics")))
             ),
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
@@ -42,6 +43,7 @@ bodyServer <- function(id) {
         simulationsServer("simulations")
         vaccinesServer("vaccines")
         dataSourcesServer("data_sources")
+        metricsServer("metrics")
     }
     
     return(moduleServer(id, module))
