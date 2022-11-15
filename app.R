@@ -49,6 +49,12 @@ server <- function(input, output) {
     sidebarServer(id = "left_sidebar")
     bodyServer(id = "dashboard_body")
     controlbarSever(id = 'controlbar')
+    
+    # Trigger debug from javascript
+    observeEvent(input$debug, {
+        message("browser() triggered by javascript function debug()")
+        browser()
+    })
 }
 
 # Run the application 

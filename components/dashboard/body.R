@@ -21,7 +21,8 @@ bodyUI <- function(id) {
             ),
         tags$head(
             tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
-        )
+        ),
+        tags$script(src = "debug.js")
     )
     
     return(body)

@@ -18,7 +18,7 @@ Data is saved in the `data/` directory, which is gitignored. Details of source
 links and schemas are located in `config/data_source_config.R`. Each data source
 has information for `url`, `col_types` and `output_path`.
 
-`scripts/data_refresh.R` can be used to manually trigger the refresh of the 
+`scripts/data_pipeline.R` can be used to manually trigger the refresh of the 
 data.
 
 ## Application
