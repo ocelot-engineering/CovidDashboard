@@ -139,16 +139,14 @@ overviewServer <- function(id, daily_cases, vax) {
         
         timeSeriesPlotServer(
             id = "plot_ts_cases",
-            ts_data = daily_cases_ts(),
-            x_col = "DATE_REPORTED",
+            ts_data = daily_cases_ts,
             y_cols = c("NEW_CASES", "NEW_CASES_MA_7DAY", "NEW_CASES_MA_30DAY", "NEW_CASES_MA_90DAY", "NEW_CASES_MA_180DAY"), # reactive - selectise (views, agg)
             labels = list(yaxis = "New Cases")
         )
         
         timeSeriesPlotServer(
             id = "plot_ts_deaths",
-            ts_data = daily_deaths_ts(),
-            x_col = "DATE_REPORTED",
+            ts_data = daily_deaths_ts,
             y_cols = c("NEW_DEATHS_MA_7DAY", "NEW_DEATHS_MA_30DAY", "NEW_DEATHS_MA_90DAY", "NEW_DEATHS_MA_180DAY"), # reactive - selectise (views, agg)
             labels = list(yaxis = "New Deaths")
         )
