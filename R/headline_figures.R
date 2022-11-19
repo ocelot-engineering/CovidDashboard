@@ -4,7 +4,6 @@
 # Functions to generate the headline numbers for the app, such as latest reported
 # case and death numbers and how they compare to the previous day
 # 
-# TODO: Add tests for functions
 # TODO: Vaccine numbers
 
 

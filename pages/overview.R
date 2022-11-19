@@ -16,9 +16,9 @@ overviewUI <- function(id) {
                    , valueBoxOutput(ns("risk_rating"), width = 3)
                    )
         ),
-        fluidRow(column(width = 12, plotly::plotlyOutput(ns("plot_ts_cases")))
-        ), 
-        fluidRow(column(width = 12, plotly::plotlyOutput(ns("plot_ts_death")))
+        fluidRow(column(width = 12, timeSeriesPlotUI(ns("plot_ts_cases")))
+        ),
+        fluidRow(column(width = 12, timeSeriesPlotUI(ns("plot_ts_deaths")))
         ),
         fluidRow(column(width = 12, plotly::plotlyOutput(ns("plot_ts_vax")))
         )
@@ -27,33 +27,68 @@ overviewUI <- function(id) {
     return(overview)
 }
 
-overviewServer <- function(id) {
+overviewServer <- function(id, daily_cases, vax) {
     
     module <- function(input, output, session) {
         ns <- session$ns
+
+        # Data -----------------------------------------------------------------
         
-        # TODO: create global store and make reactive
-        daily_cases <- get_daily_cases()
-        cases  <- calc_cases(daily_cases)
-        deaths <- calc_deaths(daily_cases)
+        # Daily cases
+        daily_cases_filt <- reactive(daily_cases, label = "daily_cases_filt")
+        headline_cases  <- reactive(calc_cases(daily_cases = daily_cases_filt()), label = "headline_cases")
+        headline_deaths <- reactive(calc_deaths(daily_cases = daily_cases_filt()), label = "headline_deaths")
         
-        # Top row --------------------------------------------------------------
+        
+        # Vaccines
+        vax_filt <- reactive(vax, label = "vax_filt")
+        
+        
+        # Time series data
+        daily_agg <- reactive({
+            # Aggregated daily cases at daily level
+            get_daily_agg(
+                daily_cases = daily_cases_filt(),
+                agg = sum,
+                cols_sel = c("NEW_CASES", "NEW_DEATHS"))
+        }, label = "daily_agg")
+        
+        
+        daily_cases_ts <- reactive({
+            # Aggregated daily cases at daily level with moving average smoothing
+            smooth_daily_agg(
+                daily_agg = daily_agg(),
+                cols_used = "NEW_CASES",
+                custom_ma_orders = c(180)) # make custom_ma_orders reactive
+        }, label = "daily_cases_ts")
+        
+        
+        daily_deaths_ts <- reactive({
+            # Aggregated daily deaths at daily level with moving average smoothing
+            smooth_daily_agg(
+                daily_agg = daily_agg(),
+                cols_used = "NEW_DEATHS",
+                custom_ma_orders = c(180)) # make custom_ma_orders reactive
+        }, label = "daily_deaths_ts")
+        
+        
+        # Headline (top row) ---------------------------------------------------
         
         output$new_cases <- renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Cases", 
-                new_cases   = cases$new_cases, 
-                total_cases = cases$total_cases, 
-                perc_inc    = cases$perc_inc, 
+                new_cases   = headline_cases()$new_cases, 
+                total_cases = headline_cases()$total_cases, 
+                perc_inc    = headline_cases()$perc_inc, 
                 icon        = shiny::icon("house-medical"))
         )
         
         output$new_deaths <- renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Deaths", 
-                new_cases   = deaths$new_cases, 
-                total_cases = deaths$total_cases, 
-                perc_inc    = deaths$perc_inc, 
+                new_cases   = headline_deaths()$new_cases, 
+                total_cases = headline_deaths()$total_cases, 
+                perc_inc    = headline_deaths()$perc_inc, 
                 icon        = shiny::icon("skull"))
         )
         
@@ -99,37 +134,27 @@ overviewServer <- function(id) {
         
 
         # Time series plots ----------------------------------------------------
-
-        # TODO - time series plots
-        output$plot_ts_cases <- plotly::renderPlotly(expr = {
-            daily_cases <- get_daily_cases() # FIXME: move data global store
-            daily_cases_ts <- get_daily_agg(daily_cases, agg = sum, cols_sel = c("NEW_CASES"))
-            daily_cases_ts_smoothed <- add_ma_smoothing(daily_cases_ts, cols_used = c("NEW_CASES"), orders = c(7, 30, 90, 180))
-            plt <- blank_ts_plot(daily_cases_ts_smoothed)
-            plt %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_CASES_MA_7DAY) %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_CASES_MA_30DAY) %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_CASES_MA_90DAY) %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_CASES_MA_180DAY)
-        })
         
-        output$plot_ts_death <- plotly::renderPlotly(expr = {
-            daily_cases <- get_daily_cases() # FIXME: move data global store
-            daily_cases_ts <- get_daily_agg(daily_cases, agg = sum, cols_sel = c("NEW_DEATHS"))
-            daily_cases_ts_smoothed <- add_ma_smoothing(daily_cases_ts, cols_used = c("NEW_DEATHS"), orders = c(7, 30, 90, 180))
-            plt <- blank_ts_plot(daily_cases_ts_smoothed)
-            plt %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_DEATHS_MA_7DAY) %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_DEATHS_MA_30DAY) %>% 
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_DEATHS_MA_90DAY) %>%
-                add_trace(data = daily_cases_ts_smoothed, type = 'scatter', mode = 'lines', x = ~DATE_REPORTED, y = ~NEW_DEATHS_MA_180DAY)
-        })
+        # timeSeriesControls()
+        
+        timeSeriesPlotServer(
+            id = "plot_ts_cases",
+            ts_data = daily_cases_ts(),
+            x_col = "DATE_REPORTED",
+            y_cols = c("NEW_CASES", "NEW_CASES_MA_7DAY", "NEW_CASES_MA_30DAY", "NEW_CASES_MA_90DAY", "NEW_CASES_MA_180DAY"), # reactive - selectise (views, agg)
+            labels = list(yaxis = "New Cases")
+        )
+        
+        timeSeriesPlotServer(
+            id = "plot_ts_deaths",
+            ts_data = daily_deaths_ts(),
+            x_col = "DATE_REPORTED",
+            y_cols = c("NEW_DEATHS_MA_7DAY", "NEW_DEATHS_MA_30DAY", "NEW_DEATHS_MA_90DAY", "NEW_DEATHS_MA_180DAY"), # reactive - selectise (views, agg)
+            labels = list(yaxis = "New Deaths")
+        )
         
         output$plot_ts_vax <- plotly::renderPlotly(expr = {
-            daily_cases <- get_daily_cases() # FIXME: move data global store
-            daily_cases_ts <- get_daily_agg(daily_cases, agg = sum, cols_sel = c("NEW_DEATHS"))
-            daily_cases_ts_smoothed <- add_ma_smoothing(daily_cases_ts, cols_used = c("NEW_DEATHS"), orders = c(1))
-            plt <- blank_ts_plot(daily_cases_ts_smoothed)
+            plt <- blank_ts_plot()
         })
         
         return(output)

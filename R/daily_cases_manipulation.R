@@ -125,3 +125,23 @@ add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEA
     
     return(output)
 }
+
+#' Smooth columns in daily cases data
+#' 
+#' @param daily_agg tibble: daily cases time series (1 date per row)
+#' @param cols_used: character vector: columns to be smoothed
+#' @param custom_ma_orders int vector: order of smoothing (each element will produce a new column)
+#' 
+#' @returns A tibble of the daily cases time series smoothed with original columns
+#' 
+smooth_daily_agg <- function(daily_agg, cols_used, custom_ma_orders = c()) {
+    # Moving average orders
+    def_ma_orders <- c(7, 30, 90)
+    ma_orders <- unique(c(def_ma_orders, custom_ma_orders))
+    
+    daily_agg_smoothed <- daily_agg %>% 
+        dplyr::select(DATE_REPORTED, dplyr::all_of(cols_used)) %>% 
+        add_ma_smoothing(cols_used = c(cols_used), orders = ma_orders)
+    
+    return(daily_agg_smoothed)
+}
