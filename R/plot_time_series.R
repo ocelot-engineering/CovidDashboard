@@ -40,7 +40,7 @@ blank_ts_plot <- function(data = data.frame(), labels = list(), colour_pallet = 
     labels <- modifyList(default_labels, labels)
     
     # Set up canvas
-    fig <- plot_ly(data = data) %>%
+    fig <- plot_ly(data = data, type = "scatter", mode = "lines") %>%
         config(displayModeBar = FALSE) %>% 
         config(displaylogo = FALSE)
     
@@ -56,6 +56,7 @@ blank_ts_plot <- function(data = data.frame(), labels = list(), colour_pallet = 
         zerolinewidth = 2,
         gridcolor = 'ffff',
         title = labels$yaxis
+        # hoverformat = '.2r'
       )
     
     # yaxis_right <- list(
@@ -69,12 +70,14 @@ blank_ts_plot <- function(data = data.frame(), labels = list(), colour_pallet = 
     fig <- fig %>%
         layout(
             title = labels$title,
-            showlegend = FALSE,
+            showlegend = TRUE,
+            hovermode = "x unified",
             xaxis = xaxis,
             yaxis = yaxis_left,
             # yaxis2 = yaxis_right,
             plot_bgcolor = colour_pallet$dark_highlight,
-            paper_bgcolor = colour_pallet$light_highlight)
+            paper_bgcolor = colour_pallet$light_highlight
+            )
     
     
     return(fig)
@@ -105,14 +108,16 @@ build_ts_trace_fn <- function(x, data = NULL, type = "scatter", mode = "lines") 
     checkmate::assert_string(type)
     checkmate::assert_string(mode)
     
-    func <- function(p, y) {
+    func <- function(p, y, ...) {
         output <- add_trace(
             p,
             data = data, 
             type = type, 
             mode = mode, 
             x = make_formula(x, prefix = "~"), 
-            y = make_formula(y, prefix = "~")
+            y = make_formula(y, prefix = "~"),
+            name = y,
+            ...
         )
         return(output)
     }
@@ -145,11 +150,15 @@ build_ts_trace_fn <- function(x, data = NULL, type = "scatter", mode = "lines") 
 #' y = c("NEW_CASES_MA_7DAY", "NEW_CASES_MA_90DAY") 
 #' labels = list(yaxis = "New Cases"))
 #' }
-plot_all_ts_traces <- function(ts_data, x_col, y_cols, labels = list()) {
+plot_all_ts_traces <- function(ts_data, x_col, y_cols, y_cols_hidden = c(), labels = list()) {
     checkmate::assert_data_frame(ts_data)
     checkmate::assert_string(x_col)
     checkmate::assert_character(y_cols)
     checkmate::assert_list(labels)
+    
+    # Harden inputs
+    y_cols        <- c(y_cols)
+    y_cols_hidden <- c(y_cols_hidden)
     
     # Initalise plot
     init_plt <- blank_ts_plot(data = ts_data, labels = labels, colour_pallet = colour_pallet)
@@ -158,7 +167,13 @@ plot_all_ts_traces <- function(ts_data, x_col, y_cols, labels = list()) {
     add_ts_trace <- build_ts_trace_fn(x = x_col)
     
     # Generate plot for all traces
-    plt <- purrr::reduce(.x = y_cols, .f = add_ts_trace, .init = init_plt)
+    if (length(y_cols_hidden) > 0) {
+        y_cols_visible <- dplyr::setdiff(y_cols, y_cols_hidden)
+        plt <- purrr::reduce(.x = y_cols_visible, .f = add_ts_trace, .init = init_plt)
+        plt <- purrr::reduce(.x = y_cols_hidden, .f = add_ts_trace, visible = "legendonly", .init = plt)
+    } else {
+        plt <- purrr::reduce(.x = y_cols, .f = add_ts_trace, .init = init_plt) 
+    }
     
     return(plt)
 }

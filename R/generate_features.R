@@ -11,7 +11,7 @@ generate_features <- function(output_dir = "data/") {
     return(invisible())
 }
 
-generate_population_feature <- function() {
+generate_population_feature <- function(daily_cases = get_daily_cases(), vacc = get_vaccination()) {
     # NOTE: this feature will not be generated in the near future. It will 
     # instead be retrieved from a reliable data source (such as OECD).
     # In the meantime will we assume the population is static over time (which 
@@ -24,12 +24,12 @@ generate_population_feature <- function() {
     # 4. For any countries that cannot have their population calculated, estimate from their total deaths
     
     # Estimate current population from vaccination data ------------------------
-    vacc <- get_vaccination()
+    # vacc <- get_vaccination()
     vacc <- vacc %>% dplyr::mutate(POPULATION = 100 * (TOTAL_VACCINATIONS / TOTAL_VACCINATIONS_PER100))
     population <- vacc %>% dplyr::select(COUNTRY, POPULATION)
     
     # Get dates and country codes from daily cases
-    daily_cases <- get_daily_cases()
+    # daily_cases <- get_daily_cases()
     country_date <- daily_cases %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY)
     population_hist <- dplyr::left_join(country_date, population, by = c("COUNTRY"))
     

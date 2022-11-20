@@ -16,11 +16,38 @@ overviewUI <- function(id) {
                    , valueBoxOutput(ns("risk_rating"), width = 3)
                    )
         ),
-        fluidRow(column(width = 12, timeSeriesPlotUI(ns("plot_ts_cases")))
+        fluidRow(
+            column(width = 8, timeSeriesPlotUI(ns("plot_ts_cases"))),
+            column(width = 4, 
+                   shinydashboardPlus::box(
+                       width = 12, title = "Top 5 Increases", collapsible = TRUE,
+                       shinydashboardPlus::boxPad(
+                           color = "gray",
+                           descriptionBlock(
+                               number = "17%", 
+                               numberColor = "green", 
+                               numberIcon = icon("caret-up"),
+                               header = "$35,210.43", 
+                               text = "AUSTRALIA", 
+                               rightBorder = TRUE,
+                               marginBottom = FALSE
+                               ),
+                           descriptionBlock(
+                               number = "12%", 
+                               numberColor = "green", 
+                               numberIcon = icon("caret-up"),
+                               header = "1m", 
+                               text = "BRAZIL", 
+                               rightBorder = TRUE,
+                               marginBottom = FALSE
+                           )
+                           )
+                       )
+                   ),
         ),
-        fluidRow(column(width = 12, timeSeriesPlotUI(ns("plot_ts_deaths")))
+        fluidRow(column(width = 8, timeSeriesPlotUI(ns("plot_ts_deaths")))
         ),
-        fluidRow(column(width = 12, plotly::plotlyOutput(ns("plot_ts_vax")))
+        fluidRow(column(width = 8, plotly::plotlyOutput(ns("plot_ts_vax")))
         )
     )
     
@@ -39,10 +66,8 @@ overviewServer <- function(id, daily_cases, vax) {
         headline_cases  <- reactive(calc_cases(daily_cases = daily_cases_filt()), label = "headline_cases")
         headline_deaths <- reactive(calc_deaths(daily_cases = daily_cases_filt()), label = "headline_deaths")
         
-        
         # Vaccines
         vax_filt <- reactive(vax, label = "vax_filt")
-        
         
         # Time series data
         daily_agg <- reactive({
@@ -53,7 +78,6 @@ overviewServer <- function(id, daily_cases, vax) {
                 cols_sel = c("NEW_CASES", "NEW_DEATHS"))
         }, label = "daily_agg")
         
-        
         daily_cases_ts <- reactive({
             # Aggregated daily cases at daily level with moving average smoothing
             smooth_daily_agg(
@@ -61,7 +85,6 @@ overviewServer <- function(id, daily_cases, vax) {
                 cols_used = "NEW_CASES",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_cases_ts")
-        
         
         daily_deaths_ts <- reactive({
             # Aggregated daily deaths at daily level with moving average smoothing
@@ -140,15 +163,15 @@ overviewServer <- function(id, daily_cases, vax) {
         timeSeriesPlotServer(
             id = "plot_ts_cases",
             ts_data = daily_cases_ts,
-            y_cols = c("NEW_CASES", "NEW_CASES_MA_7DAY", "NEW_CASES_MA_30DAY", "NEW_CASES_MA_90DAY", "NEW_CASES_MA_180DAY"), # reactive - selectise (views, agg)
-            labels = list(yaxis = "New Cases")
+            labels = list(yaxis = "New Cases", box_title = "Cases", xaxis = ""),
+            deselected_traces = c("NEW_CASES")
         )
         
         timeSeriesPlotServer(
             id = "plot_ts_deaths",
             ts_data = daily_deaths_ts,
-            y_cols = c("NEW_DEATHS_MA_7DAY", "NEW_DEATHS_MA_30DAY", "NEW_DEATHS_MA_90DAY", "NEW_DEATHS_MA_180DAY"), # reactive - selectise (views, agg)
-            labels = list(yaxis = "New Deaths")
+            labels = list(yaxis = "New Deaths", box_title = "Deaths", xaxis = ""),
+            deselected_traces = c("NEW_DEATHS")
         )
         
         output$plot_ts_vax <- plotly::renderPlotly(expr = {
