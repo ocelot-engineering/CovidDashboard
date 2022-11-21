@@ -97,9 +97,62 @@ calculate_outbreak_rating <- function(new_cases, population) {
 describe_outbreak <- function(outbreak_rating) {
     checkmate::assert_numeric(outbreak_rating, null.ok = TRUE)
     
-    thresholds <- c(0             , 1    , 10   , 20    , 30, .Machine$integer.max)
-    labels     <- c("No new cases", "Low", "Medium", "High", "Extreme")
-    output <- as.character(cut(outbreak_rating, breaks = thresholds, labels = labels, right = FALSE))
+    thresholds <- get_outbreak_rating_types()$thresholds
+    labels     <- get_outbreak_rating_types()$labels
+    output     <- as.character(cut(outbreak_rating, breaks = thresholds, labels = labels, right = FALSE))
     
     return(output)
 }
+
+
+#' Generates the labels, descriptions and thresholds for each outbreak rating type.
+#' 
+#' @param label string: filters the color and threshold based on the associated label
+#' @param color string: filters the label and threshold based on the associated color
+#' 
+#' @returns list of thresholds, labels and colors
+#' 
+#' @seealso `describe_outbreak`
+#' 
+#' @examples
+#' \dontrun{
+#' get_outbreak_rating_types()
+#' get_outbreak_rating_types(label = "Low")
+#' get_outbreak_rating_types(color = "maroon")
+#' get_outbreak_rating_types("Maximum")
+#' }
+get_outbreak_rating_types <- function(label = NULL, color = NULL) {
+    checkmate::assert_string(label, null.ok = TRUE)
+    checkmate::assert_string(label, null.ok = TRUE)
+    
+    # Thresholds, labels and colors
+    thresholds <- c(0             , 1       , 10      , 20    , 30, .Machine$integer.max)
+    labels     <- c("No new cases", "Low"   , "Medium", "High", "Extreme")
+    colors     <- c("green"       , "yellow", "orange", "red" , "maroon")
+    
+    # Querying for label or color. Returns all if nothing is found.
+    idx <- integer(0)
+    if (!is.null(label)) {
+        idx <- which(labels == label)
+    }
+    
+    if (!is.null(color)) {
+        idx <- which(colors == color)
+    }
+    
+    if (length(idx) > 0) {
+        thresholds <- thresholds[idx:(idx+1)]
+        labels <- labels[idx]
+        colors <- colors[idx] 
+    }
+    
+    # Output list
+    output <- list(
+        thresholds = thresholds,
+        labels     = labels,
+        colors     = colors
+    )
+    return(output)
+}
+
+

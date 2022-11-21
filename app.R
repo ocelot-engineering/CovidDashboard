@@ -16,6 +16,7 @@ library(lubridate)
 library(plotly)
 library(forecast)
 library(purrr)
+library(DT)
 
 # Sources -----------------------------------------------------------------
 
@@ -56,7 +57,7 @@ server <- function(input, output) {
     # Components ---------------------------------------------------------------
     headerServer(id = "app_header")
     sidebarServer(id = "left_sidebar")
-    bodyServer(id = "dashboard_body", daily_cases = daily_cases, vax = vax)
+    bodyServer(id = "dashboard_body", daily_cases = daily_cases, vax = vax, population = population)
     controlbarSever(id = 'controlbar')
     
     # Trigger debug from javascript --------------------------------------------

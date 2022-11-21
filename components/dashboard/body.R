@@ -30,15 +30,15 @@ bodyUI <- function(id) {
 }
 
 
-bodyServer <- function(id, daily_cases, vax) {
+bodyServer <- function(id, daily_cases, vax, population) {
     
     module <- function(input, output, session) {
         ns <- session$ns
         
-        overviewServer("page_overview", daily_cases = daily_cases, vax = vax)
+        overviewServer("page_overview", daily_cases = daily_cases, vax = vax, population = population)
         newsFeedServer("news_feed")
         countryCompServer("country_comp")
-        dataExplorerServer("country_comp")
+        dataExplorerServer("country_comp", daily_cases = daily_cases, vax = vax, population = population)
         worldMapServer("world_map")
         simulationsServer("simulations")
         vaccinesServer("vaccines")

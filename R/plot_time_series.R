@@ -45,17 +45,19 @@ blank_ts_plot <- function(data = data.frame(), labels = list(), colour_pallet = 
         config(displaylogo = FALSE)
     
     xaxis <- list(
-        zerolinecolor = '#ffff',
+        zerolinecolor = colour_pallet$background,
         zerolinewidth = 2,
-        gridcolor = 'ffff',
-        title = labels$xaxis
+        gridcolor = colour_pallet$background,
+        title = list(text = labels$xaxis, font = list(color = colour_pallet$light_highlight)),
+        tickfont = list(color = colour_pallet$light_highlight)
         )
     
     yaxis_left <- list(
-        zerolinecolor = '#ffff',
+        zerolinecolor = colour_pallet$background,
         zerolinewidth = 2,
-        gridcolor = 'ffff',
-        title = labels$yaxis
+        gridcolor = colour_pallet$background,
+        title = list(text = labels$yaxis, font = list(color = colour_pallet$light_highlight)),
+        tickfont = list(color = colour_pallet$light_highlight)
         # hoverformat = '.2r'
       )
     
@@ -76,7 +78,8 @@ blank_ts_plot <- function(data = data.frame(), labels = list(), colour_pallet = 
             yaxis = yaxis_left,
             # yaxis2 = yaxis_right,
             plot_bgcolor = colour_pallet$dark_highlight,
-            paper_bgcolor = colour_pallet$light_highlight
+            paper_bgcolor = colour_pallet$background,
+            legend = list(bgcolor = colour_pallet$light_highlight, orientation = "h", xanchor = "center", x = 0.5)
             )
     
     

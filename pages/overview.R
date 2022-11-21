@@ -17,8 +17,10 @@ overviewUI <- function(id) {
                    )
         ),
         fluidRow(
-            column(width = 8, timeSeriesPlotUI(ns("plot_ts_cases"))),
-            column(width = 4, 
+            column(width = 7, timeSeriesPlotUI(ns("plot_ts_cases"))),
+            column(width = 5, 
+                   shinydashboardPlus::box(
+                       width = 12, title = "World Map", collapsible = TRUE),
                    shinydashboardPlus::box(
                        width = 12, title = "Top 5 Increases", collapsible = TRUE,
                        shinydashboardPlus::boxPad(
@@ -45,16 +47,16 @@ overviewUI <- function(id) {
                        )
                    ),
         ),
-        fluidRow(column(width = 8, timeSeriesPlotUI(ns("plot_ts_deaths")))
+        fluidRow(column(width = 7, timeSeriesPlotUI(ns("plot_ts_deaths")))
         ),
-        fluidRow(column(width = 8, plotly::plotlyOutput(ns("plot_ts_vax")))
+        fluidRow(column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax")))
         )
     )
     
     return(overview)
 }
 
-overviewServer <- function(id, daily_cases, vax) {
+overviewServer <- function(id, daily_cases, vax, population) {
     
     module <- function(input, output, session) {
         ns <- session$ns
@@ -68,6 +70,9 @@ overviewServer <- function(id, daily_cases, vax) {
         
         # Vaccines
         vax_filt <- reactive(vax, label = "vax_filt")
+        
+        # Population
+        population_filt <- reactive(population, label = "population")
         
         # Time series data
         daily_agg <- reactive({
@@ -93,6 +98,34 @@ overviewServer <- function(id, daily_cases, vax) {
                 cols_used = "NEW_DEATHS",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_deaths_ts")
+        
+        latest_rows_by_country <- reactive({
+            # latest rows for each country
+            get_latest_info_by_country(daily_cases_filt(), lag = 0)
+        }, label = "latest_rows_by_country")
+        
+        latest_outbreak_rating <- reactive({
+            # outbreak rating for latest date for each country
+            
+            # Get population cols
+            pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
+            
+            # get latest rows for each country, then sum up to a singledate
+            outbreak_rating <- latest_rows_by_country() %>% 
+                dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES) %>% 
+                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>% 
+                dplyr::summarise(
+                    UNQ_DATES = dplyr::n_distinct(DATE_REPORTED)
+                  , UNQ_COUNTRIES = dplyr::n_distinct(COUNTRY_CODE)
+                  , NEW_CASES = sum(NEW_CASES)
+                  , POPULATION = sum(POPULATION)
+                ) %>% 
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>% 
+                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
+            
+            outbreak_rating
+        }, label = "latest_outbreak_rating")
+        
         
         
         # Headline (top row) ---------------------------------------------------
@@ -125,21 +158,26 @@ overviewServer <- function(id, daily_cases, vax) {
         )
         
         
-        output$risk_rating <- renderValueBox(
+        output$risk_rating <- renderValueBox({
+            
+            outbreak_rating <- latest_outbreak_rating()
+            desc <- outbreak_rating$OUTBREAK_DESC[1]
+            color <- get_outbreak_rating_types(label = desc)$colors[1]
+            
             expr = valueBox(
-                value    = "High", 
+                value    = desc, 
                 icon     = shiny::icon("gauge-high"),
-                color    = "red",
+                color    = color,
                 subtitle = HTML(paste0(
-                    "<b>", "Global Risk", "</b>",
+                    "<b>", "Outbreak rating", "</b>",
                     "<br>",
                     "There are multiple active outbreaks",
                     "<br>",
-                    "and a high risk of spread.",
+                    "and a ", tolower(desc), " risk of spread.",
                     "<br>"
                 ))
             )
-        )
+        })
         
         # TODO: Risk rating (daily cases per 100k people)
         calc_risk_rating <- function() {
@@ -157,8 +195,6 @@ overviewServer <- function(id, daily_cases, vax) {
         
 
         # Time series plots ----------------------------------------------------
-        
-        # timeSeriesControls()
         
         timeSeriesPlotServer(
             id = "plot_ts_cases",
