@@ -7,8 +7,11 @@
 
 daily_cases <- get_test_data("daily_cases")
 population <- get_test_data("population")
+daily_cases_sel <- daily_cases %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES)
+population_sel <- population %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, POPULATION)
+daily_cases_w_pop <- dplyr::left_join(daily_cases_sel, population_sel, by = c("DATE_REPORTED", "COUNTRY_CODE"))
 
-outbreak_ratings = generate_daily_outbreak_ratings(daily_cases, population)
+outbreak_ratings = generate_daily_outbreak_ratings(daily_cases_w_pop)
 
 testthat::test_that("outbreak ratings has same rows as daily cases", {
     testthat::expect_equal(nrow(outbreak_ratings), nrow(daily_cases))

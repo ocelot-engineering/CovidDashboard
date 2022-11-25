@@ -49,6 +49,8 @@ overviewUI <- function(id) {
         ),
         fluidRow(column(width = 7, timeSeriesPlotUI(ns("plot_ts_deaths")))
         ),
+        fluidRow(column(width = 7, timeSeriesPlotUI(ns("plot_ts_outbreak")))
+        ),
         fluidRow(column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax")))
         )
     )
@@ -74,6 +76,12 @@ overviewServer <- function(id, daily_cases, vax, population) {
         # Population
         population_filt <- reactive(population, label = "population")
         
+        world_population <- reactive({
+            population_filt() %>% 
+                dplyr::group_by(DATE_REPORTED) %>% 
+                dplyr::summarise(dplyr::across(POPULATION, sum))
+        })
+        
         # Time series data
         daily_agg <- reactive({
             # Aggregated daily cases at daily level
@@ -98,6 +106,22 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 cols_used = "NEW_DEATHS",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_deaths_ts")
+        
+        daily_outbreak_rating_ts <- reactive({
+            # Aggregated daily outbreak rating at daily level with moving average smoothing
+            daily_cases_w_pop <- dplyr::left_join(
+                daily_agg(), 
+                world_population(), 
+                by = c("DATE_REPORTED")) %>% 
+                dplyr::select(-NEW_DEATHS)
+            
+            outbreak_ratings <- generate_daily_outbreak_ratings(daily_cases_w_pop = daily_cases_w_pop)
+            
+            smooth_daily_agg(
+                daily_agg = outbreak_ratings,
+                cols_used = "OUTBREAK_RATING",
+                custom_ma_orders = c(180)) # make custom_ma_orders reactive
+        }, label = "daily_outbreak_rating_ts")
         
         latest_rows_by_country <- reactive({
             # latest rows for each country
@@ -209,6 +233,14 @@ overviewServer <- function(id, daily_cases, vax, population) {
             labels = list(yaxis = "New Deaths", box_title = "Deaths", xaxis = ""),
             deselected_traces = c("NEW_DEATHS")
         )
+        
+        timeSeriesPlotServer(
+            id = "plot_ts_outbreak",
+            ts_data = daily_outbreak_rating_ts,
+            labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
+            deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY")
+        ) # TODO: generalise timeSeriesPlotServer() to be able to add more traces and disable custom traces
+        # TODO: add shading to show rating thresholds
         
         output$plot_ts_vax <- plotly::renderPlotly(expr = {
             plt <- blank_ts_plot()

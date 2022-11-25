@@ -20,7 +20,6 @@
 #' Generates a dataset including daily outbreak ratings.
 #' 
 #' @param daily_cases data frame: includes DATE_REPOTED, COUNTRY_CODE and NEW_CASES columns
-#' @param population: data frame: includes DATE_REPOTED, COUNTRY_CODE and POPULATION columns
 #' 
 #' @returns tibble dataset with date, country, outbreak rating and outbreak description
 #' 
@@ -28,19 +27,15 @@
 #' 
 #' @examples
 #' \dontrun{
-#' daily_cases <- get_daily_cases()
-#' population  <- get_population()
-#' outbreak_ratings = generate_daily_outbreak_ratings(daily_cases, population)
+#' daily_cases_sel <- get_daily_cases() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES)
+#' population_sel <- get_population() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, POPULATION)
+#' daily_cases_w_pop <- dplyr::left_join(daily_cases_sel, population_sel, by = c("DATE_REPORTED", "COUNTRY_CODE"))
+#' outbreak_ratings = generate_daily_outbreak_ratings(daily_cases_w_pop)
 #' }
-generate_daily_outbreak_ratings <- function(daily_cases, population) {
-    checkmate::assert_tibble(daily_cases)
-    checkmate::assert_tibble(population)
+generate_daily_outbreak_ratings <- function(daily_cases_w_pop) {
+    checkmate::assert_tibble(daily_cases_w_pop)
     
-    population_sel <- population %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, POPULATION)
-    
-    daily_cases_sel <- daily_cases %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES)
-    
-    daily_outbreak_ratings <- dplyr::left_join(daily_cases_sel, population_sel, by = c("DATE_REPORTED", "COUNTRY_CODE")) %>% 
+    daily_outbreak_ratings <- daily_cases_w_pop %>% 
         dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>% 
         dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
     
