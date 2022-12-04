@@ -2,18 +2,25 @@
 # Time series plot
 #
 
-timeSeriesPlotUI <- function(id, ...) {
+timeSeriesPlotUI <- function(id, show_dropdown = TRUE, collapsible = TRUE, ...) {
     ns <- NS(id)
+    
+    # Drop down menu for adding traces and showing sources
+    dropdown_menu <- if(show_dropdown) {
+        shinydashboardPlus::boxDropdown(
+            shinydashboardPlus::boxDropdownItem("Add Trace", id = ns("open_plot_config"), icon = icon("chart-line")),
+            shinydashboardPlus::dropdownDivider(),
+            shinydashboardPlus::boxDropdownItem("See data sources", href = proj_config$who_link)
+        )
+    } else {
+        NULL
+    }
     
     html_output <- shinydashboardPlus::box(
         width = 12, 
         title = textOutput(ns("box_name")), 
-        collapsible = TRUE,
-        dropdownMenu = shinydashboardPlus::boxDropdown(
-            shinydashboardPlus::boxDropdownItem("Add Trace", id = ns("open_plot_config"), icon = icon("chart-line")),
-            shinydashboardPlus::dropdownDivider(),
-            shinydashboardPlus::boxDropdownItem("See data sources", href = proj_config$who_link)
-        ),
+        collapsible = collapsible,
+        dropdownMenu = dropdown_menu,
         fluidRow(column(width = 12, plotly::plotlyOutput(ns("plot_time_series"))))
     )
     
@@ -21,7 +28,7 @@ timeSeriesPlotUI <- function(id, ...) {
 }
 
 
-timeSeriesPlotServer <- function(id, ts_data, labels = list(yaxis = "", box_title = ""), deselected_traces = c()) {
+timeSeriesPlotServer <- function(id, ts_data, labels = list(yaxis = "", box_title = ""), deselected_traces = c(), ...) {
     
     module <- function(input, output, session) {
         
@@ -85,7 +92,8 @@ timeSeriesPlotServer <- function(id, ts_data, labels = list(yaxis = "", box_titl
                 y_cols        = y_cols(), 
                 y_cols_hidden = y_deselected_cols(),
                 labels        = labels
-                )
+            ) %>% add_all_layers(layers = list(...))
+
         })
         
         return(invisible(NULL))
@@ -93,3 +101,5 @@ timeSeriesPlotServer <- function(id, ts_data, labels = list(yaxis = "", box_titl
     
     return(moduleServer(id, module))
 }
+
+

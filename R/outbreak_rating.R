@@ -151,3 +151,108 @@ get_outbreak_rating_types <- function(label = NULL, color = NULL) {
 }
 
 
+# Generating outbreak shading for plots -----------------------------------
+
+#' Generates the shading layers for the outbreak rating plot
+#' 
+#' @param xmin date as a string in "yyyy-mm-dd": where the plot starts on the x-axis
+#' @param xmax date as a string in "yyyy-mm-dd": where the plot ends on the x-axis
+#' 
+#' @returns list: list of layers for plotly plot
+#' 
+#' @seealso `get_outbreak_rating_types`
+#' 
+#' @examples
+#' \dontrun{
+#' generate_outbreak_rating_shading_layers("2022-03-01", "2022-06-10")
+#' }
+generate_outbreak_rating_shading_layers <- function(xmin, xmax) {
+    checkmate::assert_date(xmin)
+    checkmate::assert_date(xmax)
+    
+    # Initalise all shading layers
+    shading_layers <- list()
+    
+    # Function to initalise shading layer
+    init_shading_layer <- function() {
+        init_shading_layer <- list(
+            type = "rect",
+            opacity = 0.1,
+            x0 = xmin, 
+            x1 = xmax, 
+            xref = "x",
+            yref = "y"
+        )
+        
+        return(init_shading_layer)
+    }
+    
+    # Get outbreak rating classifications ratings and the count of ratings for
+    #  looping.
+    o_rate_classifications <- get_outbreak_rating_types()
+    n_ratings <- length(o_rate_classifications$labels)
+    
+    for (idx in 1:n_ratings) {
+        
+        min_tresh <- o_rate_classifications$thresholds[[idx]]
+        max_tresh <- min(o_rate_classifications$thresholds[[idx + 1]], 100)
+        label     <- o_rate_classifications$labels[[idx]]
+        color     <- o_rate_classifications$colors[[idx]]
+        
+        shading_layer <- init_shading_layer()
+        shading_layer[["fillcolor"]] <- color
+        shading_layer[["line"]] <- list(color = color)
+        shading_layer[["y0"]] <- min_tresh
+        shading_layer[["y1"]] <- max_tresh
+        
+        shading_layers <-  append(shading_layers, list(shading_layer))
+        
+    }
+    
+    return(shading_layers)
+}
+
+
+#' Generates a layout function to write the layers of the background for the 
+#' outbreak rating plotly plot
+#' 
+#' @description 
+#' A higher order function that generates a configured layout function for use
+#' with plotly. This is very bespoke to the outbreak rating plot and should not
+#' be used in other plots.
+#' 
+#' @param xmin date as a string in "yyyy-mm-dd": where the plot starts on the x-axis
+#' @param xmax date as a string in "yyyy-mm-dd": where the plot ends on the x-axis
+#' 
+#' @returns function: configured layout function with colored backgrounds
+#' 
+#' @seealso `get_outbreak_rating_types`, `generate_outbreak_rating_shading_layers`
+#' 
+#' @examples
+#' \dontrun{
+#' timeSeriesPlotServer(
+#'   id = "plot_ts_outbreak",
+#'   ts_data = daily_outbreak_rating_ts,
+#'   labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
+#'   deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY"),
+#'   make_outbreak_rating_shading_layer_fn( # produces the layers for background color shading
+#'     xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]), 
+#'     xmax = max(daily_outbreak_rating_ts()[["DATE_REPORTED"]])
+#'   )
+#' )
+#' }
+make_outbreak_rating_shading_layer_fn <- function(xmin, xmax) {
+    checkmate::assert_date(xmin)
+    checkmate::assert_date(xmax)
+    
+    plt_with_shading_fn <- function(plt) {
+        
+        plt_with_shading <- layout(
+            p      = plt, 
+            shapes = generate_outbreak_rating_shading_layers(xmin = xmin, xmax = xmax)
+        )
+        return(plt_with_shading)
+    }
+    
+    return(plt_with_shading_fn)
+}

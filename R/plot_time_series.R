@@ -128,10 +128,7 @@ build_ts_trace_fn <- function(x, data = NULL, type = "scatter", mode = "lines") 
 }
 
 
-
-# Plotting all traces -----------------------------------------------------
-
-
+# Plotting all traces and layers ------------------------------------------
 
 #' Plots a time series with all traces at once.
 #' 
@@ -176,6 +173,32 @@ plot_all_ts_traces <- function(ts_data, x_col, y_cols, y_cols_hidden = c(), labe
         plt <- purrr::reduce(.x = y_cols_hidden, .f = add_ts_trace, visible = "legendonly", .init = plt)
     } else {
         plt <- purrr::reduce(.x = y_cols, .f = add_ts_trace, .init = init_plt) 
+    }
+    
+    return(plt)
+}
+
+
+#' Add extra a list of single argument plotly layer functions
+#' 
+#' @description All functions should take a single plot argument
+#' 
+#' @param plt: plotly: existing plot to add layers to
+#' @param layers: list of functions: list of single argument functions
+#' 
+#' @returns plotly plot
+#' 
+add_all_layers <- function(plt, layers) {
+    checkmate::assert_list(layers)
+    
+    if (length(layers) > 0) {
+        for (additional_layer in layers) {
+            if (!is.function(additional_layer)) {
+                warning("Can only pass functions into timeSeriesPlotServer '...'.")
+                next
+            }
+            plt <- plt %>% additional_layer()
+        }
     }
     
     return(plt)

@@ -238,9 +238,12 @@ overviewServer <- function(id, daily_cases, vax, population) {
             id = "plot_ts_outbreak",
             ts_data = daily_outbreak_rating_ts,
             labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
-            deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY")
-        ) # TODO: generalise timeSeriesPlotServer() to be able to add more traces and disable custom traces
-        # TODO: add shading to show rating thresholds
+            deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY"),
+            make_outbreak_rating_shading_layer_fn( # produces the layers for background color shading
+                xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]), 
+                xmax = max(daily_outbreak_rating_ts()[["DATE_REPORTED"]])
+            )
+        )
         
         output$plot_ts_vax <- plotly::renderPlotly(expr = {
             plt <- blank_ts_plot()
