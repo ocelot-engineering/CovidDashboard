@@ -16,7 +16,7 @@ plot_world_map <- function(outbreak_ratings) {
     
     # Set up color pallet
     bins <- c(0, seq(1, 30, length.out = 7), 100)
-    pallet <- colorBin("YlOrRd", domain = world_map[["OUTBREAK_RATING"]], bins = bins)
+    pallet <- colorBin("YlOrRd", domain = world_map_polys[["OUTBREAK_RATING"]], bins = bins)
     
     # Generate world map output
     world_map <- leaflet::leaflet() %>% 
