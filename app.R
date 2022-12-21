@@ -17,6 +17,9 @@ library(plotly)
 library(forecast)
 library(purrr)
 library(DT)
+library(leaflet)
+library(rnaturalearth)
+
 
 # Sources -----------------------------------------------------------------
 

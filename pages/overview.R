@@ -18,40 +18,44 @@ overviewUI <- function(id) {
         ),
         fluidRow(
             column(width = 7, timeSeriesPlotUI(ns("plot_ts_cases"))),
+            column(width = 5, timeSeriesPlotUI(ns("plot_ts_outbreak")))
+        ),
+        fluidRow(
+            column(width = 7, timeSeriesPlotUI(ns("plot_ts_deaths"))),
             column(width = 5, 
                    shinydashboardPlus::box(
-                       width = 12, title = "World Map", collapsible = TRUE),
-                   shinydashboardPlus::box(
-                       width = 12, title = "Top 5 Increases", collapsible = TRUE,
-                       shinydashboardPlus::boxPad(
-                           color = "gray",
-                           descriptionBlock(
-                               number = "17%", 
-                               numberColor = "green", 
-                               numberIcon = icon("caret-up"),
-                               header = "$35,210.43", 
-                               text = "AUSTRALIA", 
-                               rightBorder = TRUE,
-                               marginBottom = FALSE
-                               ),
-                           descriptionBlock(
-                               number = "12%", 
-                               numberColor = "green", 
-                               numberIcon = icon("caret-up"),
-                               header = "1m", 
-                               text = "BRAZIL", 
-                               rightBorder = TRUE,
-                               marginBottom = FALSE
-                           )
-                           )
-                       )
-                   ),
+                       width = 12, title = "World Map", collapsible = TRUE,
+                       leaflet::leafletOutput(outputId = ns("world_map"))
+                   )
+            )
         ),
-        fluidRow(column(width = 7, timeSeriesPlotUI(ns("plot_ts_deaths")))
-        ),
-        fluidRow(column(width = 7, timeSeriesPlotUI(ns("plot_ts_outbreak")))
-        ),
-        fluidRow(column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax")))
+        fluidRow(column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax"))),
+                 column(width = 5,
+                        shinydashboardPlus::box(
+                            width = 12, title = "Top 5 Increases", collapsible = TRUE,
+                            shinydashboardPlus::boxPad(
+                                color = "gray",
+                                descriptionBlock(
+                                    number = "17%", 
+                                    numberColor = "green", 
+                                    numberIcon = icon("caret-up"),
+                                    header = "$35,210.43", 
+                                    text = "AUSTRALIA", 
+                                    rightBorder = TRUE,
+                                    marginBottom = FALSE
+                                ),
+                                descriptionBlock(
+                                    number = "12%", 
+                                    numberColor = "green", 
+                                    numberIcon = icon("caret-up"),
+                                    header = "1m", 
+                                    text = "BRAZIL", 
+                                    rightBorder = TRUE,
+                                    marginBottom = FALSE
+                                )
+                            )
+                        )
+                 ),
         )
     )
     
@@ -129,7 +133,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
         }, label = "latest_rows_by_country")
         
         latest_outbreak_rating <- reactive({
-            # outbreak rating for latest date for each country
+            # outbreak rating for latest date for all countries
             
             # Get population cols
             pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
@@ -151,6 +155,21 @@ overviewServer <- function(id, daily_cases, vax, population) {
         }, label = "latest_outbreak_rating")
         
         
+        latest_outbreak_rating_by_country <- reactive({
+            # outbreak rating for latest date for each countries
+            
+            # Get population cols
+            pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
+            
+            # get latest rows for each country
+            outbreak_rating <- latest_rows_by_country() %>% 
+                dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, NEW_CASES) %>% 
+                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>% 
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>% 
+                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
+            
+            outbreak_rating
+        }, label = "latest_outbreak_rating_by_country")
         
         # Headline (top row) ---------------------------------------------------
         
@@ -249,7 +268,22 @@ overviewServer <- function(id, daily_cases, vax, population) {
             plt <- blank_ts_plot()
         })
         
-        return(output)
+        
+        output$world_map <- leaflet::renderLeaflet({
+            outbreak_ratings <- latest_outbreak_rating_by_country() %>% 
+                dplyr::select(dplyr::all_of(c(
+                    "COUNTRY_CODE", 
+                    "COUNTRY", 
+                    "OUTBREAK_RATING", 
+                    "OUTBREAK_DESC"))
+                    )
+            
+            plt <- plot_world_map(outbreak_ratings)
+        })
+        
+        
+        
+        return(invisible())
     }
     
     return(moduleServer(id, module))
