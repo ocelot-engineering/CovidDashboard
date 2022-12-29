@@ -7,6 +7,7 @@
 
 # Sources -----------------------------------------------------------------
 
+library(dplyr)
 source("R/enhanced_base_utilties.R", local = TRUE)
 source_dir(dir = "./R", local = TRUE)
 
