@@ -8,20 +8,24 @@ COPY . /srv/shiny-server/CovidDashboard
 
 WORKDIR /srv/shiny-server/CovidDashboard
 
-RUN ["rm", "-r", "/srv/shiny-server/*"] # Remove demo apps
+# remove demo apps
+# RUN ["rm", "-r", "/srv/shiny-server/*"]
 
-EXPOSE 3838 # default shiny port
+# default shiny port
+EXPOSE 3838
 
-RUN ["apt", "update"] # update package list
+# update package list
+RUN ["apt", "update"]
 
-RUN ["apt", "install", "-y", "libssl-dev", "libgdal-dev", "libudunits2-dev", "nano"] # install linux packages
+# install linux packages
+RUN ["apt", "install", "-y", "libssl-dev", "libgdal-dev", "libudunits2-dev", "nano"]
 
-RUN ["R", "-e", "install.packages('renv')"] # install renv for dependency management
+# install renv for dependency management
+RUN ["R", "-e", "install.packages('renv')"]
 
-RUN ["R", "-e", "install.packages('shinydashboard')"] # install renv for dependency management
-    
-RUN ["R", "-e", "renv::restore()"] # install R packages
+# install R packages
+RUN ["R", "-e", "renv::restore()"]
+RUN ["R", "-e", "renv::isolate()"]
 
-RUN ["R", "-e", "renv::isolate()"] # install R packages
-
-CMD ["Rscript", "scripts/data_pipeline.R"] # Download data
+# Download data
+CMD ["Rscript", "scripts/data_pipeline.R"]

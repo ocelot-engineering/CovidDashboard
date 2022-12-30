@@ -1,21 +1,23 @@
 {
-	"name": "R (rocker/r-ver base)",
+	"name": "${localWorkspaceFolderBasename}",
 	"image": "ghcr.io/rocker-org/devcontainer/r-ver:4.2",
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": {
-			"version": "latest"
+		"ghcr.io/rocker-org/devcontainer-features/pandoc:1": {},
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+			"packages": "libssl-dev,libgdal-dev,libudunits2-dev,nano,vim"
 		}
-	}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "R --version",
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "root"
 }
