@@ -11,7 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 ![Screenshot of dashboard](inst/assets/images/snapshot_sm.png)
 
-TODO - brief summary once it’s mostly built
+The purpose of this application is to provide users with an up-to-date view of the worldwide Covid-19 situation. It provides useful metrics to assist in decision making for those who reside or intend to visit countries impacted by Covid-19.
 
 ## Data
 
