@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/CovidDashboard)](https://CRAN.R-project.org/package=CovidDashboard)
 <!-- badges: end -->
 
 ![Screenshot of dashboard](inst/assets/images/snapshot_sm.png)
