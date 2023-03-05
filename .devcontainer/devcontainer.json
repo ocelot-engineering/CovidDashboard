@@ -1,11 +1,9 @@
 {
 	"name": "${localWorkspaceFolderBasename}",
-	"image": "ghcr.io/rocker-org/devcontainer/r-ver:4.2",
+	"image": "ghcr.io/rocker-org/devcontainer/geospatial:4.2",
 	"features": {
-		"ghcr.io/rocker-org/devcontainer-features/pandoc:1": {},
-		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"packages": "libssl-dev,libgdal-dev,libudunits2-dev,nano,vim"
+			"packages": "nano,vim"
 		}
 	},
 

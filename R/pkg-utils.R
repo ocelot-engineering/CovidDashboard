@@ -5,5 +5,3 @@
 get_pkg_name <- function() {
   return("CovidDashboard")
 }
-
-

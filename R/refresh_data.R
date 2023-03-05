@@ -69,7 +69,6 @@ refresh_dataset_from_config <- function(data_config) {
 #' @param output_path string: Path to write file to.
 #' 
 #' @returns invisible NULL
-#' @examples
 #' 
 refresh_dataset <- function(dat, output_path) {
     checkmate::assert_tibble(dat)
