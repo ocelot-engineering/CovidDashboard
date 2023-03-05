@@ -1,23 +1,23 @@
 #
-# Page: Metrics
+# Page: World map view
 #
-# Explanation of metrics
+# Visualise a heatmap overlaid on the map of the world
 #
 
-metricsUI <- function(id) {
+worldMapUI <- function(id) {
     ns <- NS(id)
-    metrics <- underConstructionUI(ns("under_construction"))
-    
-    return(metrics)
+    world_map <- underConstructionUI(ns("under_construction"))
+
+    return(world_map)
 }
 
-metricsServer <- function(id) {
-    
+worldMapServer <- function(id) {
+
     module <- function(input, output, session) {
         ns <- session$ns
         output <- underConstructionServer("under_construction")
         return(output)
     }
-    
+
     return(moduleServer(id, module))
 }

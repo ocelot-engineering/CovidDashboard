@@ -3,9 +3,9 @@
 #
 
 plot_gauge <- function() {
-    
+
     previous <- 70
-    
+
     fig <- plot_ly(
         type = "indicator",
         mode = "gauge+number+delta",
@@ -25,14 +25,14 @@ plot_gauge <- function() {
             threshold = list(
                 line = list(color = "purple", width = 4),
                 thickness = 0.75,
-                value = previous))) 
+                value = previous)))
     fig <- fig %>%
-        config(displayModeBar = FALSE) %>% 
-        config(displaylogo = FALSE) %>% 
+        config(displayModeBar = FALSE) %>%
+        config(displaylogo = FALSE) %>%
         layout(
-            margin = list(l=20,r=30),
+            margin = list(l = 20,r = 30),
             paper_bgcolor = colour_pallet$background, 
             font = list(color = colour_pallet$white, family = "Arial"))
-    
+
     return(fig)
 }

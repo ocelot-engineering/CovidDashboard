@@ -1,5 +1,3 @@
-^renv$
-^renv\.lock$
 ^CovidDashboard\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$

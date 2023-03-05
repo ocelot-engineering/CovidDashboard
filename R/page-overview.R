@@ -6,7 +6,7 @@
 
 overviewUI <- function(id) {
     ns <- NS(id)
-    
+
     overview <- fluidPage(
         fluidRow(div(class = "top-padding")),
         fluidRow(column(width = 12
@@ -58,34 +58,34 @@ overviewUI <- function(id) {
                  ),
         )
     )
-    
+
     return(overview)
 }
 
 overviewServer <- function(id, daily_cases, vax, population) {
-    
+
     module <- function(input, output, session) {
         ns <- session$ns
 
         # Data -----------------------------------------------------------------
-        
+
         # Daily cases
         daily_cases_filt <- reactive(daily_cases, label = "daily_cases_filt")
         headline_cases  <- reactive(calc_cases(daily_cases = daily_cases_filt()), label = "headline_cases")
         headline_deaths <- reactive(calc_deaths(daily_cases = daily_cases_filt()), label = "headline_deaths")
-        
+
         # Vaccines
         vax_filt <- reactive(vax, label = "vax_filt")
-        
+
         # Population
         population_filt <- reactive(population, label = "population")
-        
+
         world_population <- reactive({
             population_filt() %>% 
-                dplyr::group_by(DATE_REPORTED) %>% 
+                dplyr::group_by(DATE_REPORTED) %>%
                 dplyr::summarise(dplyr::across(POPULATION, sum))
         })
-        
+
         # Time series data
         daily_agg <- reactive({
             # Aggregated daily cases at daily level
@@ -94,7 +94,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 agg = sum,
                 cols_sel = c("NEW_CASES", "NEW_DEATHS"))
         }, label = "daily_agg")
-        
+
         daily_cases_ts <- reactive({
             # Aggregated daily cases at daily level with moving average smoothing
             smooth_daily_agg(
@@ -102,7 +102,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 cols_used = "NEW_CASES",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_cases_ts")
-        
+
         daily_deaths_ts <- reactive({
             # Aggregated daily deaths at daily level with moving average smoothing
             smooth_daily_agg(
@@ -110,69 +110,69 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 cols_used = "NEW_DEATHS",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_deaths_ts")
-        
+
         daily_outbreak_rating_ts <- reactive({
             # Aggregated daily outbreak rating at daily level with moving average smoothing
             daily_cases_w_pop <- dplyr::left_join(
                 daily_agg(), 
                 world_population(), 
-                by = c("DATE_REPORTED")) %>% 
+                by = c("DATE_REPORTED")) %>%
                 dplyr::select(-NEW_DEATHS)
-            
+
             outbreak_ratings <- generate_daily_outbreak_ratings(daily_cases_w_pop = daily_cases_w_pop)
-            
+
             smooth_daily_agg(
                 daily_agg = outbreak_ratings,
                 cols_used = "OUTBREAK_RATING",
                 custom_ma_orders = c(180)) # make custom_ma_orders reactive
         }, label = "daily_outbreak_rating_ts")
-        
+
         latest_rows_by_country <- reactive({
             # latest rows for each country
             get_latest_info_by_country(daily_cases_filt(), lag = 0)
         }, label = "latest_rows_by_country")
-        
+
         latest_outbreak_rating <- reactive({
             # outbreak rating for latest date for all countries
-            
+
             # Get population cols
             pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
-            
+
             # get latest rows for each country, then sum up to a singledate
-            outbreak_rating <- latest_rows_by_country() %>% 
-                dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES) %>% 
-                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>% 
+            outbreak_rating <- latest_rows_by_country() %>%
+                dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES) %>%
+                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>%
                 dplyr::summarise(
                     UNQ_DATES = dplyr::n_distinct(DATE_REPORTED)
                   , UNQ_COUNTRIES = dplyr::n_distinct(COUNTRY_CODE)
                   , NEW_CASES = sum(NEW_CASES)
                   , POPULATION = sum(POPULATION)
                 ) %>% 
-                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>% 
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>%
                 dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
-            
+
             outbreak_rating
         }, label = "latest_outbreak_rating")
-        
-        
+
+
         latest_outbreak_rating_by_country <- reactive({
             # outbreak rating for latest date for each countries
-            
+
             # Get population cols
             pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
-            
+
             # get latest rows for each country
-            outbreak_rating <- latest_rows_by_country() %>% 
-                dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, NEW_CASES) %>% 
-                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>% 
-                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>% 
+            outbreak_rating <- latest_rows_by_country() %>%
+                dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, NEW_CASES) %>%
+                dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>%
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>%
                 dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
-            
+
             outbreak_rating
         }, label = "latest_outbreak_rating_by_country")
-        
+
         # Headline (top row) ---------------------------------------------------
-        
+
         output$new_cases <- renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Cases", 
@@ -181,7 +181,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 perc_inc    = headline_cases()$perc_inc, 
                 icon        = shiny::icon("house-medical"))
         )
-        
+
         output$new_deaths <- renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Deaths", 
@@ -190,7 +190,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 perc_inc    = headline_deaths()$perc_inc, 
                 icon        = shiny::icon("skull"))
         )
-        
+
         output$new_vax <- renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Vaccinations", 
@@ -199,14 +199,14 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 perc_inc    = 0, 
                 icon        = shiny::icon("syringe"))
         )
-        
-        
+
+
         output$risk_rating <- renderValueBox({
-            
+
             outbreak_rating <- latest_outbreak_rating()
             desc <- outbreak_rating$OUTBREAK_DESC[1]
             color <- get_outbreak_rating_types(label = desc)$colors[1]
-            
+
             expr = valueBox(
                 value    = desc, 
                 icon     = shiny::icon("gauge-high"),
@@ -221,7 +221,7 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 ))
             )
         })
-        
+
         # TODO: Risk rating (daily cases per 100k people)
         calc_risk_rating <- function() {
             # TODO: historical population is available from OECD
@@ -235,24 +235,24 @@ overviewServer <- function(id, daily_cases, vax, population) {
             #      not be captured at a fine grain level. 
             #      TODO: note justification for metrics and decisions like this. 
         }
-        
+
 
         # Time series plots ----------------------------------------------------
-        
+
         timeSeriesPlotServer(
             id = "plot_ts_cases",
             ts_data = daily_cases_ts,
             labels = list(yaxis = "New Cases", box_title = "Cases", xaxis = ""),
             deselected_traces = c("NEW_CASES")
         )
-        
+
         timeSeriesPlotServer(
             id = "plot_ts_deaths",
             ts_data = daily_deaths_ts,
             labels = list(yaxis = "New Deaths", box_title = "Deaths", xaxis = ""),
             deselected_traces = c("NEW_DEATHS")
         )
-        
+
         timeSeriesPlotServer(
             id = "plot_ts_outbreak",
             ts_data = daily_outbreak_rating_ts,
@@ -263,29 +263,26 @@ overviewServer <- function(id, daily_cases, vax, population) {
                 xmax = max(daily_outbreak_rating_ts()[["DATE_REPORTED"]])
             )
         )
-        
+
         output$plot_ts_vax <- plotly::renderPlotly(expr = {
             plt <- blank_ts_plot()
         })
-        
-        
+
+
         output$world_map <- leaflet::renderLeaflet({
             outbreak_ratings <- latest_outbreak_rating_by_country() %>% 
                 dplyr::select(dplyr::all_of(c(
-                    "COUNTRY_CODE", 
-                    "COUNTRY", 
-                    "OUTBREAK_RATING", 
+                    "COUNTRY_CODE",
+                    "COUNTRY",
+                    "OUTBREAK_RATING",
                     "OUTBREAK_DESC"))
                     )
-            
+
             plt <- plot_world_map(outbreak_ratings)
         })
-        
-        
-        
+
         return(invisible())
     }
-    
+
     return(moduleServer(id, module))
 }
-
