@@ -4,65 +4,78 @@
 # Starting page of the dashboard that gives a world overview of COVID.
 #
 
-overviewUI <- function(id) {
-    ns <- NS(id)
+#' Page: Overview ui function
+#' @inherit module_docs params
+#' @importFrom leaflet leafletOutput
+#' @importFrom shinydashboardPlus box
+#' @importFrom shinydashboard valueBoxOutput
+#' @importFrom plotly plotlyOutput
+overview_ui <- function(id) {
+    ns <- shiny::NS(id)
 
-    overview <- fluidPage(
-        fluidRow(div(class = "top-padding")),
-        fluidRow(column(width = 12
-                   , valueBoxOutput(ns("new_cases")  , width = 3)
-                   , valueBoxOutput(ns("new_deaths") , width = 3)
-                   , valueBoxOutput(ns("new_vax")    , width = 3)
-                   , valueBoxOutput(ns("risk_rating"), width = 3)
+    overview <- shiny::fluidPage(
+        shiny::fluidRow(shiny::div(class = "top-padding")),
+        shiny::fluidRow(shiny::column(width = 12
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_cases")  , width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_deaths") , width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_vax")    , width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("risk_rating"), width = 3)
                    )
         ),
-        fluidRow(
-            column(width = 7, timeSeriesPlotUI(ns("plot_ts_cases"))),
-            column(width = 5, timeSeriesPlotUI(ns("plot_ts_outbreak")))
+        shiny::fluidRow(
+            shiny::column(width = 7, time_series_plot_ui(id = ns("plot_ts_cases"))),
+            shiny::column(width = 5, time_series_plot_ui(id = ns("plot_ts_outbreak")))
         ),
-        fluidRow(
-            column(width = 7, timeSeriesPlotUI(ns("plot_ts_deaths"))),
-            column(width = 5, 
+        shiny::fluidRow(
+            shiny::column(width = 7, time_series_plot_ui(id = ns("plot_ts_deaths"))),
+            shiny::column(width = 5, 
                    shinydashboardPlus::box(
-                       width = 12, title = "World Map", collapsible = TRUE,
-                       leaflet::leafletOutput(outputId = ns("world_map"))
-                   )
+                        width = 12,
+                        title = "World Map",
+                        collapsible = TRUE,
+                        leaflet::leafletOutput(outputId = ns("world_map"))
+                    )
             )
         ),
-        fluidRow(column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax"))),
-                 column(width = 5,
-                        shinydashboardPlus::box(
-                            width = 12, title = "Top 5 Increases", collapsible = TRUE,
-                            shinydashboardPlus::boxPad(
-                                color = "gray",
-                                descriptionBlock(
-                                    number = "17%", 
-                                    numberColor = "green", 
-                                    numberIcon = icon("caret-up"),
-                                    header = "$35,210.43", 
-                                    text = "AUSTRALIA", 
-                                    rightBorder = TRUE,
-                                    marginBottom = FALSE
-                                ),
-                                descriptionBlock(
-                                    number = "12%", 
-                                    numberColor = "green", 
-                                    numberIcon = icon("caret-up"),
-                                    header = "1m", 
-                                    text = "BRAZIL", 
-                                    rightBorder = TRUE,
-                                    marginBottom = FALSE
-                                )
-                            )
+        shiny::fluidRow(
+            shiny::column(width = 7, plotly::plotlyOutput(ns("plot_ts_vax"))),
+            shiny::column(width = 5,
+                shinydashboardPlus::box(
+                    width = 12,
+                    title = "Top 5 Increases",
+                    collapsible = TRUE,
+                    shinydashboardPlus::boxPad(
+                        color = "gray",
+                        shinydashboardPlus::descriptionBlock(
+                            number = "17%", 
+                            numberColor = "green", 
+                            numberIcon = icon("caret-up"),
+                            header = "$35,210.43", 
+                            text = "AUSTRALIA", 
+                            rightBorder = TRUE,
+                            marginBottom = FALSE
+                        ),
+                        shinydashboardPlus::descriptionBlock(
+                            number = "12%", 
+                            numberColor = "green", 
+                            numberIcon = icon("caret-up"),
+                            header = "1m", 
+                            text = "BRAZIL", 
+                            rightBorder = TRUE,
+                            marginBottom = FALSE
                         )
-                 ),
+                    )
+                )
+            )
         )
     )
 
     return(overview)
 }
 
-overviewServer <- function(id, daily_cases, vax, population) {
+#' Page: Overview server function
+#' @inherit module_docs params
+overview_server <- function(id, daily_cases, vax, population) {
 
     module <- function(input, output, session) {
         ns <- session$ns

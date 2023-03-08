@@ -4,20 +4,22 @@
 # Explanation of metrics
 #
 
-metricsUI <- function(id) {
-    ns <- NS(id)
-    metrics <- underConstructionUI(ns("under_construction"))
+#' Page: Metrics ui function
+#' @inherit module_docs params
+metrics_ui <- function(id) {
+    ns <- shiny::NS(id)
+    metrics <- under_construction_ui(id = ns("under_construction"))
 
     return(metrics)
 }
 
-metricsServer <- function(id) {
+#' Page: Metrics server function
+#' @inherit module_docs params
+metrics_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-        output <- underConstructionServer("under_construction")
-        return(output)
+        under_construction_server(id = "under_construction")
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }

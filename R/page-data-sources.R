@@ -4,20 +4,22 @@
 # Explanation of data sources used
 #
 
-dataSourcesUI <- function(id) {
-    ns <- NS(id)
-    data_sources <- underConstructionUI(ns("under_construction"))
+#' Page: Data sources ui function
+#' @inherit module_docs params
+data_sources_ui <- function(id) {
+    ns <- shiny::NS(id)
+    data_sources <- under_construction_ui(id = ns("under_construction"))
 
     return(data_sources)
 }
 
-dataSourcesServer <- function(id) {
+#' Page: Data sources server function
+#' @inherit module_docs params
+data_sources_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-        output <- underConstructionServer("under_construction")
-        return(output)
+        under_construction_server(id = "under_construction")
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }

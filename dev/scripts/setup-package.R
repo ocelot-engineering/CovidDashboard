@@ -12,6 +12,7 @@ usethis::use_pipe(export = TRUE)
 usethis::use_gpl_license(version = 3, include_future = TRUE)
 usethis::use_readme_rmd()
 usethis::use_lifecycle_badge("experimental")
+usethis::use_package_doc()
 
 
 # Package dependencies ----------------------------------------------------

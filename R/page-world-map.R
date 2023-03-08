@@ -4,20 +4,22 @@
 # Visualise a heatmap overlaid on the map of the world
 #
 
-worldMapUI <- function(id) {
-    ns <- NS(id)
-    world_map <- underConstructionUI(ns("under_construction"))
+#' Page: World map ui function
+#' @inherit module_docs params
+world_map_ui <- function(id) {
+    ns <- shiny::NS(id)
+    world_map <- under_construction_ui(id = ns("under_construction"))
 
     return(world_map)
 }
 
-worldMapServer <- function(id) {
+#' Page: World map server function
+#' @inherit module_docs params
+world_map_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-        output <- underConstructionServer("under_construction")
-        return(output)
+        under_construction_server(id = "under_construction")
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }

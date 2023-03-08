@@ -13,13 +13,13 @@ server <- function(input, output) {
     population  <- get_population()
 
     # Components ---------------------------------------------------------------
-    headerServer(id = "app_header")
-    sidebarServer(id = "left_sidebar")
-    bodyServer(id = "dashboard_body", daily_cases = daily_cases, vax = vax, population = population)
-    controlbarSever(id = "controlbar")
+    header_server(id = "app_header")
+    sidebar_server(id = "left_sidebar")
+    body_server(id = "dashboard_body", daily_cases = daily_cases, vax = vax, population = population)
+    controlbar_sever(id = "controlbar")
 
     # Trigger debug from javascript --------------------------------------------
-    observeEvent(input$debug, {
+    shiny::observeEvent(input$debug, {
         message("browser() triggered by javascript function debug()")
         browser()
     })

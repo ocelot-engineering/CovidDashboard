@@ -8,12 +8,12 @@
 
 #' Takes daily cases and returns the latest rows for each country
 #'
-#' @param daily_cases tibble: daily cases from WHO
-#' @param lag int: number of days back the latest info should be lagged. I.e. 1 
-#' day back will give the latest info as if running yesterday. Can be positive 
+#' @inherit common_docs params
+#' @param lag int: number of days back the latest info should be lagged. I.e. 1
+#' day back will give the latest info as if running yesterday. Can be positive
 #' or negative, but will always go back.
 #'
-#' @returns A tibble of the daily cases with the latest dates
+#' @returns tibble: the daily cases with the latest dates
 #' @examples
 #' \dontrun{
 #' daily_cases <- get_daily_cases()
@@ -93,7 +93,7 @@ get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW
 #' @param cols_used: character vector: columns to be smoothed
 #' @param orders int vector: order of smoothing (each element will produce a new column)
 #'
-#' @returns A tibble of the daily cases time series smoothed with original columns
+#' @returns tibble: the daily cases time series smoothed with original columns
 #'
 #' @examples
 #' \dontrun{
@@ -113,6 +113,7 @@ get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW
 #' @importFrom checkmate assert_tibble assert_character assert_integerish
 #' @importFrom forecast ma
 #' @importFrom dplyr mutate across all_of
+#' 
 add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEATHS"), orders = c(3, 7, 30, 60)) {
     checkmate::assert_tibble(daily_cases_ts)
     checkmate::assert_character(cols_used)
@@ -143,7 +144,7 @@ add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEA
 #' @param cols_used: character vector: columns to be smoothed
 #' @param custom_ma_orders int vector: order of smoothing (each element will produce a new column)
 #'
-#' @returns A tibble of the daily cases time series smoothed with original columns
+#' @returns tibble: the daily cases time series smoothed with original columns
 #'
 #' @importFrom dplyr select all_of
 #' @importFrom rlang .data .env

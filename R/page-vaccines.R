@@ -5,20 +5,22 @@
 #  vaccines
 #
 
-vaccinesUI <- function(id) {
-    ns <- NS(id)
-    vaccine <- underConstructionUI(ns("under_construction"))
+#' Page: Vaccines ui function
+#' @inherit module_docs params
+vaccines_ui <- function(id) {
+    ns <- shiny::NS(id)
+    vaccine <- under_construction_ui(id = ns("under_construction"))
 
     return(vaccine)
 }
 
-vaccinesServer <- function(id) {
+#' Page: Vaccines server function
+#' @inherit module_docs params
+vaccines_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-        output <- underConstructionServer("under_construction")
-        return(output)
+        under_construction_server(id = "under_construction")
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }

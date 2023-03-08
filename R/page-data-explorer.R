@@ -4,12 +4,15 @@
 # Deep dive the data in table view
 #
 
-dataExplorerUI <- function(id) {
-    ns <- NS(id)
+#' Page: Data exploration ui function
+#' @inherit module_docs params
+#' @importFrom DT dataTableOutput
+data_explorer_ui <- function(id) {
+    ns <- shiny::NS(id)
 
-    data_explorer <- fluidPage(
-        fluidRow(div("TEST", class = "top-padding")),
-        fluidRow(column(width = 12, DT::dataTableOutput(ns("daily_cases"))))
+    data_explorer <- shiny::fluidPage(
+        shiny::fluidRow(div("TEST", class = "top-padding")),
+        shiny::fluidRow(column(width = 12, DT::dataTableOutput(ns("daily_cases"))))
         # fluidRow(column(width = 12, DT::dataTableOutput(ns("vax")))),
         # fluidRow(column(width = 12, DT::dataTableOutput(ns("population"))))
     )
@@ -17,14 +20,22 @@ dataExplorerUI <- function(id) {
     return(data_explorer)
 }
 
-dataExplorerServer <- function(id, daily_cases, vax, population) {
+#' Page: Data exploration server function
+#'
+#' @inherit module_docs params
+#' @inherit common_docs params
+#'
+#' @importFrom DT renderDataTable
+#' @importFrom dplyr slice_head
+#'
+data_explorer_server <- function(id, daily_cases, vax, population) {
 
     module <- function(input, output, session) {
         ns <- session$ns
 
         output$daily_cases <- DT::renderDataTable({
-            aaa = daily_cases %>% slice_head(n = 50)
-            browser()
+            aaa = daily_cases %>% dplyr::slice_head(n = 50)
+            # browser()
             DT::datatable(
                 data = aaa, 
                 # options = list(lengthMenu = c(5, 30, 50), pageLength = 5),
@@ -52,5 +63,5 @@ dataExplorerServer <- function(id, daily_cases, vax, population) {
         # })
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }

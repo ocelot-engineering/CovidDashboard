@@ -4,20 +4,22 @@
 # Feed of notifications received. Header notifications will link to here.
 #
 
-newsFeedUI <- function(id) {
-    ns <- NS(id)
-    news_feed <- underConstructionUI(ns("under_construction"))
+#' Page: News feed ui function
+#' @inherit module_docs params
+news_feed_ui <- function(id) {
+    ns <- shiny::NS(id)
+    news_feed <- under_construction_ui(id = ns("under_construction"))
 
     return(news_feed)
 }
 
-newsFeedServer <- function(id) {
+#' Page: News feed server function
+#' @inherit module_docs params
+news_feed_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-        output <- underConstructionServer("under_construction")
-        return(output)
+        under_construction_server(id = "under_construction")
     }
 
-    return(moduleServer(id, module))
+    return(shiny::moduleServer(id, module))
 }
