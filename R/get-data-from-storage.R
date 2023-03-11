@@ -1,25 +1,47 @@
 #
 # Get data from storage
 #
-# TODO: add docs and tests
-#
 
+# Daily cases -------------------------------------------------------------
+
+#'
+get_daily_cases_path <- function() {
+    dir <- get_config()$datasets$data_path
+    cfg <- get_config()$datasets$daily_cases
+    return(paste0(dir, cfg$name, ".", cfg$ext))
+}
+
+#' @importFrom readr read_rds
 get_daily_cases <- function() {
-    # Get data source configurations
-    data_config <- get_data_source_config()
-    return(readr::read_rds(file = data_config$datasets$daily_cases$output_path))
+    return(readr::read_rds(file = get_daily_cases_path()))
 }
 
 
+# Vaccination -------------------------------------------------------------
+
+#'
+get_vaccination_path <- function() {
+    dir <- get_config()$datasets$data_path
+    cfg <- get_config()$datasets$vaccination
+    return(paste0(dir, cfg$name, ".", cfg$ext))
+}
+
+#' @importFrom readr read_rds
 get_vaccination <- function() {
-    # Get data source configurations
-    data_config <- get_data_source_config()
-    return(readr::read_rds(file = data_config$datasets$vaccination$output_path))
+    return(readr::read_rds(file = get_vaccination_path()))
 }
 
 
+# Populaton ---------------------------------------------------------------
+
+#'
+get_population_path <- function() {
+    dir <- get_config()$datasets$data_path
+    cfg <- get_config()$datasets$population
+    return(paste0(dir, cfg$name, ".", cfg$ext))
+}
+
+#' @importFrom readr read_rds
 get_population <- function() {
-    # Get data source configurations
-    data_config <- get_data_source_config()
-    return(readr::read_rds(file = paste0(data_config$output_dir, 'population.rds')))
+    return(readr::read_rds(file = get_population_path()))
 }

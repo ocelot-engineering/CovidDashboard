@@ -5,9 +5,9 @@
 #
 
 ui_fit_in_valuebox <- function(..., width = 4) {
-    output <- div(
+    output <- shiny::div(
         class = paste0("col-sm-", width),
-        div(class = "small-box", ...)
+        shiny::div(class = "small-box", ...)
         )
     return(output)
 }

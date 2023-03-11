@@ -18,7 +18,7 @@ add_ma_smoothing(
 \item{cols_used:}{character vector: columns to be smoothed}
 }
 \value{
-A tibble of the daily cases time series smoothed with original columns
+tibble: the daily cases time series smoothed with original columns
 }
 \description{
 Takes daily cases time series and performaing moving average smoothing

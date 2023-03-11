@@ -1,0 +1,16 @@
+datasets:
+  data_path: data/
+  daily_cases:
+    name: daily_cases
+    ext: rds
+    url: https://covid19.who.int/WHO-COVID-19-global-data.csv
+  vaccination:
+    name: vaccination
+    ext: rds
+    url: https://covid19.who.int/who-data/vaccination-data.csv
+  population:
+    name: population
+    ext: rds
+proj:
+  base_url: https://covid19.who.int/
+  output_dir: data/

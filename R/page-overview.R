@@ -49,7 +49,7 @@ overview_ui <- function(id) {
                         shinydashboardPlus::descriptionBlock(
                             number = "17%", 
                             numberColor = "green", 
-                            numberIcon = icon("caret-up"),
+                            numberIcon = shiny::icon("caret-up"),
                             header = "$35,210.43", 
                             text = "AUSTRALIA", 
                             rightBorder = TRUE,
@@ -58,7 +58,7 @@ overview_ui <- function(id) {
                         shinydashboardPlus::descriptionBlock(
                             number = "12%", 
                             numberColor = "green", 
-                            numberIcon = icon("caret-up"),
+                            numberIcon = shiny::icon("caret-up"),
                             header = "1m", 
                             text = "BRAZIL", 
                             rightBorder = TRUE,

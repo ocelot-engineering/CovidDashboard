@@ -14,7 +14,7 @@ day back will give the latest info as if running yesterday. Can be positive
 or negative, but will always go back.}
 }
 \value{
-A tibble of the daily cases with the latest dates
+tibble: the daily cases with the latest dates
 }
 \description{
 Takes daily cases and returns the latest rows for each country

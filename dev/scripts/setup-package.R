@@ -32,5 +32,6 @@ usethis::use_package("purrr")
 usethis::use_package("DT")
 usethis::use_package("leaflet")
 usethis::use_package("rnaturalearth")
+usethis::use_package("yaml")
 
 devtools::install_deps(upgrade = "ask")

@@ -14,7 +14,7 @@ smooth_daily_agg(daily_agg, cols_used, custom_ma_orders = c())
 \item{cols_used:}{character vector: columns to be smoothed}
 }
 \value{
-A tibble of the daily cases time series smoothed with original columns
+tibble: the daily cases time series smoothed with original columns
 }
 \description{
 Smooth columns in daily cases data

@@ -11,8 +11,8 @@ data_explorer_ui <- function(id) {
     ns <- shiny::NS(id)
 
     data_explorer <- shiny::fluidPage(
-        shiny::fluidRow(div("TEST", class = "top-padding")),
-        shiny::fluidRow(column(width = 12, DT::dataTableOutput(ns("daily_cases"))))
+        shiny::fluidRow(shiny::div("TEST", class = "top-padding")),
+        shiny::fluidRow(shiny::column(width = 12, DT::dataTableOutput(ns("daily_cases"))))
         # fluidRow(column(width = 12, DT::dataTableOutput(ns("vax")))),
         # fluidRow(column(width = 12, DT::dataTableOutput(ns("population"))))
     )

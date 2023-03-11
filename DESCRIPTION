@@ -28,4 +28,5 @@ Imports:
     rnaturalearth,
     shiny,
     shinydashboard,
-    shinydashboardPlus
+    shinydashboardPlus,
+    yaml

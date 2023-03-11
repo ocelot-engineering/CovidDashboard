@@ -14,19 +14,19 @@ body_ui <- function(id) {
 
     body <- shinydashboard::dashboardBody(style = "padding: 0px;",
         shinydashboard::tabItems(
-            shinydashboard::tabItem(tabName = "overview"     , overviewUI(ns("page_overview"))),
-            shinydashboard::tabItem(tabName = "news_feed"    , newsFeedUI(ns("news_feed"))),
-            shinydashboard::tabItem(tabName = "country_comp" , countryCompUI(ns("country_comp"))),
-            shinydashboard::tabItem(tabName = "data_explorer", dataExplorerUI(ns("data_explorer"))),
-            shinydashboard::tabItem(tabName = "world_map"    , worldMapUI(ns("world_map"))),
-            shinydashboard::tabItem(tabName = "simulations"  , simulationsUI(ns("simulations"))),
+            shinydashboard::tabItem(tabName = "overview"     , overview_ui(ns("page_overview"))),
+            shinydashboard::tabItem(tabName = "news_feed"    , news_feed_ui(ns("news_feed"))),
+            shinydashboard::tabItem(tabName = "country_comp" , country_comp_ui(ns("country_comp"))),
+            shinydashboard::tabItem(tabName = "data_explorer", data_explorer_ui(ns("data_explorer"))),
+            shinydashboard::tabItem(tabName = "world_map"    , world_map_ui(ns("world_map"))),
+            shinydashboard::tabItem(tabName = "simulations"  , simulations_ui(ns("simulations"))),
             # shinydashboard::tabItem(tabName = "resources"    , h2("Resources overview")),
-            shinydashboard::tabItem(tabName = "vaccines"     , vaccinesUI(ns("vaccines"))),
-            shinydashboard::tabItem(tabName = "data_sources" , dataSourcesUI(ns("data_sources"))),
-            shinydashboard::tabItem(tabName = "metrics"      , metricsUI(ns("metrics")))
+            shinydashboard::tabItem(tabName = "vaccines"     , vaccines_ui(ns("vaccines"))),
+            shinydashboard::tabItem(tabName = "data_sources" , data_sources_ui(ns("data_sources"))),
+            shinydashboard::tabItem(tabName = "metrics"      , metrics_ui(ns("metrics")))
             ),
         shiny::tags$head(
-            tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+            shiny::tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
         ),
         shiny::tags$script(src = "debug.js")
     )
