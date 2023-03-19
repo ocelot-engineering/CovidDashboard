@@ -17,9 +17,10 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-![Screenshot of dashboard](inst/assets/images/snapshot_sm.png)
+![Screenshot of dashboard](inst/images/snapshot-sm.png)
 
-TODO - brief summary once it's mostly built
+The purpose of this application is to provide users with an up-to-date view of the worldwide Covid-19 situation. 
+It provides useful metrics to assist in decision making for those who reside or intend to visit countries impacted by Covid-19.
 
 ## Data
 The data used in this dashboard is sourced from the [World Health Organisation (WHO)](https://covid19.who.int/data).
@@ -50,30 +51,41 @@ TODO - testing
 
 ### Project structure
 ```
-├── app.R                 <- Shiny application
-├── components            <- UI/Server components of app (shiny modules)
-├── config                <- Project configurations. R and yaml files.
-│   ├── proj.R            <- Project configuration, e.g. project paths.  
-│   └── db_deps.yaml      <- Database connections and table names  
-├── CovidDashboard.Rproj  <- R project file
-├── docs                  <- Documentation and example code snippets
-├── inst                  <- Additional files such as images
-│   └── assets            <- Images, etc.
-├── data                  <- Data storage. (git ignored)
-│   ├── input             <- Save location for data to be ingested by application
-│   └── output            <- Save location for data exported from the application
-├── Dockerfile            <- Docker image configuration
-├── pages                 <- Pages for dashboard (shiny modules, made up of components)
-├── queries               <- Database queries (e.g. SQL)
-├── R                     <- R functions (all should be unit tested)
-├── README.md             <- The top-level README for developers using this project.
-├── renv                  <- renv local dependency management
-├── renv.lock             <- describes the state of the project library
-├── scripts               <- Scripts to be run outside of the application
-├── tests                 <- Test related files and scripts
-│   ├── testthat          <- R unit testing
-│   └── testthat.R        <- Run R unit testing
-└── www                   <- javascript and css files
+
+├── .devcontainer              <- Devcontainer configuration
+├── .vscode                    <- VS Code configuration
+├── data                       <- Data storage. (git ignored)
+│   ├── input                  <- Save location for data to be ingested by application
+│   └── output                 <- Save location for data exported from the application
+├── dev                        <- Development scripts, package setup, etc. Code run outside the app
+│   ├── prototype              <- Prototypes of shing modules and functions 
+│   ├── scripts                <- Scripts used in development of the package
+│   └── templates              <- Templates and examples of code snippets
+├── docker                     <- Docker configuration
+│   └── Dockerfile             <- Docker image configuration
+├── inst                       <- Additional files such as images
+│   ├── config                 <- Project configurations. R and yaml files.
+│   ├── images                 <- jpeg, png and other images 
+│   ├── scripts                <- javascript scripts
+│   ├── styles                 <- css and styling
+│   └── queries                <- Database queries (e.g. SQL)
+├── man                        <- Package documentation
+├── R                          <- R functions (all should be unit tested)
+│   ├── mod-<name>.R           <- Shiny module
+│   ├── mod-dashboard-<name>.R <- Dashboard component (header, sidebar, body, etc)
+│   ├── page-<name>.R          <- Page in dashboard
+│   ├── ui.R                   <- UI function for shiny app
+│   └── server.R               <- Server function for shiny app
+├── tests                      <- Test related files and scripts
+│   ├── testthat               <- R unit testing
+│   └── testthat.R             <- Run R unit testing
+├── app.R                      <- Shiny application
+├── CovidDashboard.Rproj       <- R project file
+├── DESCRIPTION                <- Package metadata and dependencies
+├── LICENSE                    <- Package license
+├── NAMESPACE                  <- Function imports and exports of the package
+├── README.md                  <- The top-level README for developers using this project (do not edit)
+└── README.rmd                 <- The top-level README for developers using this project (do edit)
 ```
 
 ### Adding features
@@ -81,7 +93,7 @@ TODO - pages, components, functions, modules, scripts, tests, queries
 TODO - less dependencies the better
 
 ### Developing outside of the Shiny framework
-TODO - not recommended to used js and css in `www/`, but sometimes required
+TODO
 
 ### Conforming to existing codebase
 Conforming to the existing style is very important (excluding times where large

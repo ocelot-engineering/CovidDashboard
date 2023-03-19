@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-R -e "renv::restore(clean = TRUE, prompt = FALSE)"
+R -e "devtools::install_deps()"
 
-Rscript ./scripts/data_pipeline.R
+Rscript ./docker/data_pipeline.R
