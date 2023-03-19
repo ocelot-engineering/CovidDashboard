@@ -230,7 +230,7 @@ generate_outbreak_rating_shading_layers <- function(xmin, xmax) {
 #' 
 #' @examples
 #' \dontrun{
-#' timeSeriesPlotServer(
+#' time_series_plot_server(
 #'   id = "plot_ts_outbreak",
 #'   ts_data = daily_outbreak_rating_ts,
 #'   labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
@@ -244,15 +244,15 @@ generate_outbreak_rating_shading_layers <- function(xmin, xmax) {
 make_outbreak_rating_shading_layer_fn <- function(xmin, xmax) {
     checkmate::assert_date(xmin)
     checkmate::assert_date(xmax)
-    
+
     plt_with_shading_fn <- function(plt) {
-        
-        plt_with_shading <- layout(
-            p      = plt, 
+
+        plt_with_shading <- plotly::layout(
+            p      = plt,
             shapes = generate_outbreak_rating_shading_layers(xmin = xmin, xmax = xmax)
         )
         return(plt_with_shading)
     }
-    
+
     return(plt_with_shading_fn)
 }

@@ -4,18 +4,18 @@
 \alias{blank_ts_plot}
 \title{Generates a blank canvas time series plot}
 \usage{
-blank_ts_plot(data = data.frame(), labels = list(), colour_pallet = list())
+blank_ts_plot(data = data.frame(), labels = list(), colour_palette = list())
 }
 \arguments{
 \item{data}{data frame: used when adding different data to an existing plot}
 
 \item{labels:}{list: e.g. \code{list(xaxis = "Date", yaxis = "Magnitude", title = "New Plot")}}
 
-\item{colour_pallet:}{list: allows custom color pallet that overrides global
-one. (see config/colour_pallet.R for changable colours)}
+\item{colour_palette:}{list: allows custom color pallet that overrides global
+one. (see config/colour-palette.yaml for changable colours)}
 }
 \value{
-plotly plot
+plotly plot_ly config layout
 }
 \description{
 This will need to have data added to it

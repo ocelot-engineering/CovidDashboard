@@ -6,15 +6,11 @@
 
 #' Page: Data exploration ui function
 #' @inherit module_docs params
-#' @importFrom DT dataTableOutput
 data_explorer_ui <- function(id) {
     ns <- shiny::NS(id)
 
     data_explorer <- shiny::fluidPage(
-        shiny::fluidRow(shiny::div("TEST", class = "top-padding")),
-        shiny::fluidRow(shiny::column(width = 12, DT::dataTableOutput(ns("daily_cases"))))
-        # fluidRow(column(width = 12, DT::dataTableOutput(ns("vax")))),
-        # fluidRow(column(width = 12, DT::dataTableOutput(ns("population"))))
+        shiny::fluidRow(shiny::div("TEST", class = "top-padding"))
     )
 
     return(data_explorer)
@@ -25,7 +21,6 @@ data_explorer_ui <- function(id) {
 #' @inherit module_docs params
 #' @inherit common_docs params
 #'
-#' @importFrom DT renderDataTable
 #' @importFrom dplyr slice_head
 #'
 data_explorer_server <- function(id, daily_cases, vax, population) {

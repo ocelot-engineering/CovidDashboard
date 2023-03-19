@@ -2,8 +2,9 @@
 # Headline value box
 #
 
+#' @importFrom shinydashboard valueBox
 headline_value_box <- function(subtitle, new_cases, total_cases, perc_inc, icon, color = "light-blue") {
-    value_box <- valueBox(
+    value_box <- shinydashboard::valueBox(
         value = format_num(new_cases), 
         icon = icon,
         color = color,

@@ -75,6 +75,7 @@ overview_ui <- function(id) {
 
 #' Page: Overview server function
 #' @inherit module_docs params
+#' @importFrom shinydashboard renderValueBox valueBox
 overview_server <- function(id, daily_cases, vax, population) {
 
     module <- function(input, output, session) {
@@ -186,7 +187,7 @@ overview_server <- function(id, daily_cases, vax, population) {
 
         # Headline (top row) ---------------------------------------------------
 
-        output$new_cases <- renderValueBox(
+        output$new_cases <- shinydashboard::renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Cases", 
                 new_cases   = headline_cases()$new_cases, 
@@ -195,7 +196,7 @@ overview_server <- function(id, daily_cases, vax, population) {
                 icon        = shiny::icon("house-medical"))
         )
 
-        output$new_deaths <- renderValueBox(
+        output$new_deaths <- shinydashboard::renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Deaths", 
                 new_cases   = headline_deaths()$new_cases, 
@@ -204,7 +205,7 @@ overview_server <- function(id, daily_cases, vax, population) {
                 icon        = shiny::icon("skull"))
         )
 
-        output$new_vax <- renderValueBox(
+        output$new_vax <- shinydashboard::renderValueBox(
             expr = headline_value_box(
                 subtitle    = "New Vaccinations", 
                 new_cases   = 0, 
@@ -214,13 +215,13 @@ overview_server <- function(id, daily_cases, vax, population) {
         )
 
 
-        output$risk_rating <- renderValueBox({
+        output$risk_rating <- shinydashboard::renderValueBox({
 
             outbreak_rating <- latest_outbreak_rating()
             desc <- outbreak_rating$OUTBREAK_DESC[1]
             color <- get_outbreak_rating_types(label = desc)$colors[1]
 
-            expr = valueBox(
+            expr = shinydashboard::valueBox(
                 value    = desc, 
                 icon     = shiny::icon("gauge-high"),
                 color    = color,
@@ -252,21 +253,21 @@ overview_server <- function(id, daily_cases, vax, population) {
 
         # Time series plots ----------------------------------------------------
 
-        timeSeriesPlotServer(
+        time_series_plot_server(
             id = "plot_ts_cases",
             ts_data = daily_cases_ts,
             labels = list(yaxis = "New Cases", box_title = "Cases", xaxis = ""),
             deselected_traces = c("NEW_CASES")
         )
 
-        timeSeriesPlotServer(
+        time_series_plot_server(
             id = "plot_ts_deaths",
             ts_data = daily_deaths_ts,
             labels = list(yaxis = "New Deaths", box_title = "Deaths", xaxis = ""),
             deselected_traces = c("NEW_DEATHS")
         )
 
-        timeSeriesPlotServer(
+        time_series_plot_server(
             id = "plot_ts_outbreak",
             ts_data = daily_outbreak_rating_ts,
             labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),

@@ -4,13 +4,7 @@
 # Each stage of the pipeline should be a self contained function
 #
 
-
-# Sources -----------------------------------------------------------------
-
-library(dplyr)
-source("R/enhanced_base_utilties.R", local = TRUE)
-source_dir(dir = "./R", local = TRUE)
-
+devtools::load_all()
 
 # Pipeline ----------------------------------------------------------------
 
@@ -20,5 +14,4 @@ source_dir(dir = "./R", local = TRUE)
 # requires bespoke extraction. For now, we will keep it as is and change when we
 # have to. But the lesson should be that the scope of this application and the
 # data it uses may change.
-refresh_all_data()
-generate_features()
+run_etl_pipline()

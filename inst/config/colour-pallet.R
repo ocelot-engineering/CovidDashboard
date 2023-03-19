@@ -1,8 +1,0 @@
-
-colour_pallet <- list(
-    background = "#353c42"
-  , light_highlight = "#bec5cb"
-  , dark_highlight = "#272c30"
-  , white = "#FFFFFF"
-  , black = "#000000"
-)

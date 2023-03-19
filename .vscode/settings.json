@@ -1,0 +1,23 @@
+{
+  "r.plot.useHttpgd": true,
+  "r.plot.defaults.fullWindowMode": true,
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "background": "#F5910044",
+      "foreground": "#fffc00FF"
+    },
+    "BUG": {
+      "icon": "bug",
+      "background": "#D3262655",
+      "foreground": "#FF3300FF"
+    },
+    "HACK": {
+      "icon": "tools"
+    },
+    "FIXME": {
+      "icon": "flame",
+      "background": "#00996844",
+      "foreground": "#25D366FF"
+    }
+  }
+}

@@ -22,7 +22,7 @@ be used in other plots.
 }
 \examples{
 \dontrun{
-timeSeriesPlotServer(
+time_series_plot_server(
   id = "plot_ts_outbreak",
   ts_data = daily_outbreak_rating_ts,
   labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),

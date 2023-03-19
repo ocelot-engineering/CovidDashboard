@@ -13,8 +13,8 @@ plot_gauge <- function() {
         title = list(text = "Risk", font = list(size = 24)),
         delta = list(reference = previous, increasing = list(color = "red"), decreasing = list(color = "green")),
         gauge = list(
-            axis = list(range = list(0, 100), tickwidth = 1, tickcolor = colour_pallet$background),
-            bar = list(color = colour_pallet$light_highlight),
+            axis = list(range = list(0, 100), tickwidth = 1, tickcolor = get_color_pal()$background),
+            bar = list(color = get_color_pal()$light_highlight),
             bgcolor = "white",
             borderwidth = 2,
             bordercolor = "gray",
@@ -31,8 +31,8 @@ plot_gauge <- function() {
         config(displaylogo = FALSE) %>%
         layout(
             margin = list(l = 20,r = 30),
-            paper_bgcolor = colour_pallet$background, 
-            font = list(color = colour_pallet$white, family = "Arial"))
+            paper_bgcolor = get_color_pal()$background, 
+            font = list(color = get_color_pal()$white, family = "Arial"))
 
     return(fig)
 }

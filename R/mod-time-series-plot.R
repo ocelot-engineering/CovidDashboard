@@ -16,7 +16,7 @@ time_series_plot_ui <- function(id, show_dropdown = TRUE, collapsible = TRUE, ..
         shinydashboardPlus::boxDropdown(
             shinydashboardPlus::boxDropdownItem("Add Trace", id = ns("open_plot_config"), icon = shiny::icon("chart-line")),
             shinydashboardPlus::dropdownDivider(),
-            shinydashboardPlus::boxDropdownItem("See data sources", href = proj_config$who_link)
+            shinydashboardPlus::boxDropdownItem("See data sources", href = get_config()$proj$base_url)
         )
     } else {
         NULL
