@@ -2,6 +2,7 @@
 # Functions to build daily cases dataset
 #
 
+#' Download and write the daily cases dataset
 build_daily_cases_dataset <- function() {
     url <- get_config()$datasets$daily_cases$url
     url %>%
@@ -11,6 +12,7 @@ build_daily_cases_dataset <- function() {
     return(invisible())
 }
 
+#' Get schema for daily cases dataset
 #' @importFrom readr cols col_date col_character col_integer
 get_schema_daily_cases <- function() {
     schema <- readr::cols(

@@ -3,8 +3,6 @@
 #
 # Common methods for manipulating daily cases data
 #
-# TODO: add tests
-
 
 #' Takes daily cases and returns the latest rows for each country
 #'
@@ -21,7 +19,6 @@
 #' }
 #' @importFrom checkmate assert_tibble assert_int
 #' @importFrom dplyr summarise pull filter group_by left_join
-#' @importFrom rlang .data .env
 #'
 get_latest_info_by_country <- function(daily_cases, lag = 0) {
     checkmate::assert_tibble(daily_cases)
@@ -31,12 +28,12 @@ get_latest_info_by_country <- function(daily_cases, lag = 0) {
     #  the lag allows
     max_date <- daily_cases %>% 
         dplyr::summarise(MAX_DATE = max(.data$DATE_REPORTED)) %>%
-        dplyr::pull("MAX_DATE")
+        dplyr::pull(dplyr::all_of("MAX_DATE"))
     max_date <- max_date - abs(lag)
 
     # Get latest dates by country
     latest_dates_by_country <- daily_cases %>%
-        dplyr::filter(.data$DATE_REPORTED <= max_date) %>%
+        dplyr::filter(.data$DATE_REPORTED <= .env$max_date) %>%
         dplyr::group_by(.data$COUNTRY_CODE) %>%
         dplyr::summarise(DATE_REPORTED = max(.data$DATE_REPORTED))
 
@@ -69,19 +66,20 @@ get_latest_info_by_country <- function(daily_cases, lag = 0) {
 #' }
 #' @importFrom checkmate assert_tibble assert_character assert_int
 #' @importFrom dplyr summarise filter group_by summarise across
-#' @importFrom rlang .data .env
 #'
-get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW_DEATHS"), days_back = 365*2) {
+get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW_DEATHS"), days_back = 365 * 2) {
     checkmate::assert_tibble(daily_cases)
     checkmate::assert_character(cols_sel)
     checkmate::assert_int(days_back)
 
     # Get max date to filter all dates that occur before days_back
-    max_date <- daily_cases %>% dplyr::summarise(MAX_DATE = max(.data$DATE_REPORTED)) %>% dplyr::pull("MAX_DATE")
+    max_date <- daily_cases %>%
+        dplyr::summarise(MAX_DATE = max(.data$DATE_REPORTED)) %>%
+        dplyr::pull(dplyr::all_of("MAX_DATE"))
 
-    dat <- daily_cases %>% 
+    dat <- daily_cases %>%
         dplyr::filter(.data$DATE_REPORTED > .env$max_date - .env$days_back) %>% # only take past 2 years by default
-        dplyr::group_by(.data$DATE_REPORTED) %>% 
+        dplyr::group_by(.data$DATE_REPORTED) %>%
         dplyr::summarise(dplyr::across(cols_sel, agg)) # aggregate all cols selected
 
     return(dat)
@@ -113,7 +111,7 @@ get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW
 #' @importFrom checkmate assert_tibble assert_character assert_integerish
 #' @importFrom forecast ma
 #' @importFrom dplyr mutate across all_of
-#' 
+#'
 add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEATHS"), orders = c(3, 7, 30, 60)) {
     checkmate::assert_tibble(daily_cases_ts)
     checkmate::assert_character(cols_used)
@@ -132,11 +130,12 @@ add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEA
     names(moving_avg_fns) <- paste0("MA_", orders, "DAY") # for col names in output
 
     # Add moving average cols
-    output <- daily_cases_ts %>% 
+    output <- daily_cases_ts %>%
         dplyr::mutate(dplyr::across(.cols = dplyr::all_of(cols_used), moving_avg_fns))
 
     return(output)
 }
+
 
 #' Smooth columns in daily cases data
 #'

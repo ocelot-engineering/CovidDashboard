@@ -1,4 +1,5 @@
 #' @import shiny
+#' @importFrom rlang .data .env
 #' @keywords internal
 "_PACKAGE"
 
