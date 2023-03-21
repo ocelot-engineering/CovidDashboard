@@ -8,6 +8,10 @@ calc_new_and_total(daily_cases, new_col, total_col)
 }
 \arguments{
 \item{daily_cases}{tibble: daily cases from WHO}
+
+\item{new_col}{string: column name}
+
+\item{total_col}{string: column name}
 }
 \value{
 list: new = latest number of new cases, total: total confirmed

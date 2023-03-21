@@ -5,20 +5,22 @@
 #
 
 #' Page: Overview ui function
+#'
 #' @inherit module_docs params
 #' @importFrom leaflet leafletOutput
 #' @importFrom shinydashboardPlus box
 #' @importFrom shinydashboard valueBoxOutput
 #' @importFrom plotly plotlyOutput
+#'
 overview_ui <- function(id) {
     ns <- shiny::NS(id)
 
     overview <- shiny::fluidPage(
         shiny::fluidRow(shiny::div(class = "top-padding")),
         shiny::fluidRow(shiny::column(width = 12
-                   , shinydashboard::valueBoxOutput(outputId = ns("new_cases")  , width = 3)
-                   , shinydashboard::valueBoxOutput(outputId = ns("new_deaths") , width = 3)
-                   , shinydashboard::valueBoxOutput(outputId = ns("new_vax")    , width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_cases"),   width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_deaths"),  width = 3)
+                   , shinydashboard::valueBoxOutput(outputId = ns("new_vax"),     width = 3)
                    , shinydashboard::valueBoxOutput(outputId = ns("risk_rating"), width = 3)
                    )
         ),
@@ -28,7 +30,7 @@ overview_ui <- function(id) {
         ),
         shiny::fluidRow(
             shiny::column(width = 7, time_series_plot_ui(id = ns("plot_ts_deaths"))),
-            shiny::column(width = 5, 
+            shiny::column(width = 5,
                    shinydashboardPlus::box(
                         width = 12,
                         title = "World Map",
@@ -47,20 +49,20 @@ overview_ui <- function(id) {
                     shinydashboardPlus::boxPad(
                         color = "gray",
                         shinydashboardPlus::descriptionBlock(
-                            number = "17%", 
-                            numberColor = "green", 
+                            number = "17%",
+                            numberColor = "green",
                             numberIcon = shiny::icon("caret-up"),
-                            header = "$35,210.43", 
-                            text = "AUSTRALIA", 
+                            header = "$35,210.43",
+                            text = "AUSTRALIA",
                             rightBorder = TRUE,
                             marginBottom = FALSE
                         ),
                         shinydashboardPlus::descriptionBlock(
-                            number = "12%", 
-                            numberColor = "green", 
+                            number = "12%",
+                            numberColor = "green",
                             numberIcon = shiny::icon("caret-up"),
-                            header = "1m", 
-                            text = "BRAZIL", 
+                            header = "1m",
+                            text = "BRAZIL",
                             rightBorder = TRUE,
                             marginBottom = FALSE
                         )
@@ -74,8 +76,13 @@ overview_ui <- function(id) {
 }
 
 #' Page: Overview server function
+#' @param daily_cases dataframe: daily cases dataset
+#' @param vax dataframe: vaccination dataset
+#' @param population dataframe: population dataset
 #' @inherit module_docs params
 #' @importFrom shinydashboard renderValueBox valueBox
+#' @importFrom dplyr group_by summarise across all_of left_join select mutate
+#'
 overview_server <- function(id, daily_cases, vax, population) {
 
     module <- function(input, output, session) {
@@ -95,9 +102,9 @@ overview_server <- function(id, daily_cases, vax, population) {
         population_filt <- reactive(population, label = "population")
 
         world_population <- reactive({
-            population_filt() %>% 
-                dplyr::group_by(DATE_REPORTED) %>%
-                dplyr::summarise(dplyr::across(POPULATION, sum))
+            population_filt() %>%
+                dplyr::group_by(.data$DATE_REPORTED) %>%
+                dplyr::summarise(dplyr::across(dplyr::all_of("POPULATION"), sum))
         })
 
         # Time series data
@@ -128,10 +135,10 @@ overview_server <- function(id, daily_cases, vax, population) {
         daily_outbreak_rating_ts <- reactive({
             # Aggregated daily outbreak rating at daily level with moving average smoothing
             daily_cases_w_pop <- dplyr::left_join(
-                daily_agg(), 
-                world_population(), 
+                daily_agg(),
+                world_population(),
                 by = c("DATE_REPORTED")) %>%
-                dplyr::select(-NEW_DEATHS)
+                dplyr::select(-dplyr::all_of("NEW_DEATHS"))
 
             outbreak_ratings <- generate_daily_outbreak_ratings(daily_cases_w_pop = daily_cases_w_pop)
 
@@ -150,20 +157,20 @@ overview_server <- function(id, daily_cases, vax, population) {
             # outbreak rating for latest date for all countries
 
             # Get population cols
-            pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
+            pop <- population_filt() %>% dplyr::select(dplyr::all_of(c("DATE_REPORTED", "COUNTRY_CODE", "POPULATION")))
 
             # get latest rows for each country, then sum up to a singledate
             outbreak_rating <- latest_rows_by_country() %>%
-                dplyr::select(DATE_REPORTED, COUNTRY_CODE, NEW_CASES) %>%
+                dplyr::select(dplyr::all_of(c("DATE_REPORTED", "COUNTRY_CODE", "NEW_CASES"))) %>%
                 dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>%
                 dplyr::summarise(
-                    UNQ_DATES = dplyr::n_distinct(DATE_REPORTED)
-                  , UNQ_COUNTRIES = dplyr::n_distinct(COUNTRY_CODE)
-                  , NEW_CASES = sum(NEW_CASES)
-                  , POPULATION = sum(POPULATION)
-                ) %>% 
-                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>%
-                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
+                    UNQ_DATES = dplyr::n_distinct(.data$DATE_REPORTED)
+                  , UNQ_COUNTRIES = dplyr::n_distinct(.data$COUNTRY_CODE)
+                  , NEW_CASES = sum(.data$NEW_CASES)
+                  , POPULATION = sum(.data$POPULATION)
+                ) %>%
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = .data$NEW_CASES, population = .data$POPULATION)) %>%
+                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(.data$OUTBREAK_RATING))
 
             outbreak_rating
         }, label = "latest_outbreak_rating")
@@ -173,14 +180,14 @@ overview_server <- function(id, daily_cases, vax, population) {
             # outbreak rating for latest date for each countries
 
             # Get population cols
-            pop <- population_filt() %>% dplyr::select(DATE_REPORTED, COUNTRY_CODE, POPULATION)
+            pop <- population_filt() %>% dplyr::select(dplyr::all_of(c("DATE_REPORTED", "COUNTRY_CODE", "POPULATION")))
 
             # get latest rows for each country
             outbreak_rating <- latest_rows_by_country() %>%
-                dplyr::select(DATE_REPORTED, COUNTRY_CODE, COUNTRY, NEW_CASES) %>%
+                dplyr::select(dplyr::all_of(c("DATE_REPORTED", "COUNTRY_CODE", "COUNTRY", "NEW_CASES"))) %>%
                 dplyr::left_join(y = pop, by = c("COUNTRY_CODE", "DATE_REPORTED")) %>%
-                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = NEW_CASES, population = POPULATION)) %>%
-                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(OUTBREAK_RATING))
+                dplyr::mutate(OUTBREAK_RATING = calculate_outbreak_rating(new_cases = .data$NEW_CASES, population = .data$POPULATION)) %>%
+                dplyr::mutate(OUTBREAK_DESC = describe_outbreak(.data$OUTBREAK_RATING))
 
             outbreak_rating
         }, label = "latest_outbreak_rating_by_country")
@@ -189,28 +196,28 @@ overview_server <- function(id, daily_cases, vax, population) {
 
         output$new_cases <- shinydashboard::renderValueBox(
             expr = headline_value_box(
-                subtitle    = "New Cases", 
-                new_cases   = headline_cases()$new_cases, 
-                total_cases = headline_cases()$total_cases, 
-                perc_inc    = headline_cases()$perc_inc, 
+                subtitle    = "New Cases",
+                new_cases   = headline_cases()$new_cases,
+                total_cases = headline_cases()$total_cases,
+                perc_inc    = headline_cases()$perc_inc,
                 icon        = shiny::icon("house-medical"))
         )
 
         output$new_deaths <- shinydashboard::renderValueBox(
             expr = headline_value_box(
-                subtitle    = "New Deaths", 
-                new_cases   = headline_deaths()$new_cases, 
-                total_cases = headline_deaths()$total_cases, 
-                perc_inc    = headline_deaths()$perc_inc, 
+                subtitle    = "New Deaths",
+                new_cases   = headline_deaths()$new_cases,
+                total_cases = headline_deaths()$total_cases,
+                perc_inc    = headline_deaths()$perc_inc,
                 icon        = shiny::icon("skull"))
         )
 
         output$new_vax <- shinydashboard::renderValueBox(
             expr = headline_value_box(
-                subtitle    = "New Vaccinations", 
-                new_cases   = 0, 
-                total_cases = 0, 
-                perc_inc    = 0, 
+                subtitle    = "New Vaccinations",
+                new_cases   = 0,
+                total_cases = 0,
+                perc_inc    = 0,
                 icon        = shiny::icon("syringe"))
         )
 
@@ -221,8 +228,8 @@ overview_server <- function(id, daily_cases, vax, population) {
             desc <- outbreak_rating$OUTBREAK_DESC[1]
             color <- get_outbreak_rating_types(label = desc)$colors[1]
 
-            expr = shinydashboard::valueBox(
-                value    = desc, 
+            shinydashboard::valueBox(
+                value    = desc,
                 icon     = shiny::icon("gauge-high"),
                 color    = color,
                 subtitle = HTML(paste0(
@@ -246,8 +253,8 @@ overview_server <- function(id, daily_cases, vax, population) {
             #      the population is 30, and January 1st 2020 the population is
             #      25, (from (30 - 20) / 365 *( 365/2 ) ) . This means spikes in
             #      population (from mass refugee immigration for example), will
-            #      not be captured at a fine grain level. 
-            #      TODO: note justification for metrics and decisions like this. 
+            #      not be captured at a fine grain level.
+            #      TODO: note justification for metrics and decisions like this.
         }
 
 
@@ -273,7 +280,7 @@ overview_server <- function(id, daily_cases, vax, population) {
             labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
             deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY"),
             make_outbreak_rating_shading_layer_fn( # produces the layers for background color shading
-                xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]), 
+                xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]),
                 xmax = max(daily_outbreak_rating_ts()[["DATE_REPORTED"]])
             )
         )
@@ -284,13 +291,13 @@ overview_server <- function(id, daily_cases, vax, population) {
 
 
         output$world_map <- leaflet::renderLeaflet({
-            outbreak_ratings <- latest_outbreak_rating_by_country() %>% 
+            outbreak_ratings <- latest_outbreak_rating_by_country() %>%
                 dplyr::select(dplyr::all_of(c(
                     "COUNTRY_CODE",
                     "COUNTRY",
                     "OUTBREAK_RATING",
                     "OUTBREAK_DESC"))
-                    )
+                )
 
             plt <- plot_world_map(outbreak_ratings)
         })

@@ -9,6 +9,11 @@ generate_population_data(
   vacc = get_vaccination()
 )
 }
+\arguments{
+\item{daily_cases}{dataframe: daily cases data}
+
+\item{vacc}{dataframe: vaccination data}
+}
 \description{
 This depends on daily cases and population tasks being complete
 }

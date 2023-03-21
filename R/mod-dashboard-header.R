@@ -16,7 +16,7 @@ header_ui <- function(id) {
 
     header <- shinydashboardPlus::dashboardHeader(
         title = "COVID-19 Dashboard",
-        shinydashboard::dropdownMenuOutput(ns("notificationsMenu"))
+        shinydashboard::dropdownMenuOutput(outputId = ns("notificationsMenu"))
     )
 
     return(header)
@@ -44,7 +44,7 @@ header_server <- function(id) {
                     icon = shiny::icon("mask-face"),
                     status = "warning"),
                 shinydashboardPlus::notificationItem(
-                    text = "Outbreak slowing in X", 
+                    text = "Outbreak slowing in X",
                     shiny::icon("virus-covid-slash")
                     , status = "success"),
                 shinydashboardPlus::notificationItem(

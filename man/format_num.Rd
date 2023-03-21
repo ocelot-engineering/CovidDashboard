@@ -9,7 +9,8 @@ format_num(num, digits = NULL, short = FALSE)
 \arguments{
 \item{num}{integer or numeric scalar: number will be formatted to string}
 
-\item{digits}{a positive integer indicating how many significant digits are to be used for numeric and complex x. The default, NULL, uses getOption("digits").}
+\item{digits}{a positive integer indicating how many significant digits are
+to be used for numeric and complex x. The default, NULL, uses getOption("digits").}
 
 \item{short}{if TRUE trims the string down and applies a suffix. E.g. 11100000 -> 11.1M}
 }

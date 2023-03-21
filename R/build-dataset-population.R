@@ -17,6 +17,9 @@ build_population_dataset <- function() {
 #' Generate the population dataset
 #'
 #' This depends on daily cases and population tasks being complete
+#' 
+#' @param daily_cases dataframe: daily cases data
+#' @param vacc dataframe: vaccination data
 #'
 #' @details
 #' NOTE: this feature will not be generated in the near future. It will

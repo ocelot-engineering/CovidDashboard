@@ -13,6 +13,9 @@
 #'
 #' @returns invisible NULL
 #'
+#' @importFrom checkmate assert_tibble assert_path_for_output
+#' @importFrom readr write_rds
+#'
 safe_write_rds_file <- function(dat, output_path) {
     checkmate::assert_tibble(dat)
     checkmate::assert_path_for_output(output_path, overwrite = TRUE, extension = "rds")
@@ -66,6 +69,9 @@ rename_file <- function(from, to) {
 #' @param path string: a string representing a file path
 #'
 #' @returns a string of a file path
+#'
+#' @importFrom checkmate assert_string
+#' @importFrom stringr str_extract_all
 #'
 generate_backup_path <- function(path) {
     checkmate::assert_string(path)

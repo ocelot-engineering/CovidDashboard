@@ -24,7 +24,6 @@ body_ui <- function(id) {
             shinydashboard::tabItem(tabName = "data_explorer", data_explorer_ui(ns("data_explorer"))),
             shinydashboard::tabItem(tabName = "world_map",     world_map_ui(ns("world_map"))),
             shinydashboard::tabItem(tabName = "simulations",   simulations_ui(ns("simulations"))),
-            # shinydashboard::tabItem(tabName = "resources", h2("Resources overview")),
             shinydashboard::tabItem(tabName = "vaccines",      vaccines_ui(ns("vaccines"))),
             shinydashboard::tabItem(tabName = "data_sources",  data_sources_ui(ns("data_sources"))),
             shinydashboard::tabItem(tabName = "metrics",       metrics_ui(ns("metrics")))

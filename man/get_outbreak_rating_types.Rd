@@ -24,6 +24,7 @@ get_outbreak_rating_types(label = "Low")
 get_outbreak_rating_types(color = "maroon")
 get_outbreak_rating_types("Maximum")
 }
+
 }
 \seealso{
 \code{describe_outbreak}

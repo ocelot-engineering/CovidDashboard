@@ -26,7 +26,7 @@ get_latest_info_by_country <- function(daily_cases, lag = 0) {
 
     # Get the maximum date. This is used for filtering out dates later than
     #  the lag allows
-    max_date <- daily_cases %>% 
+    max_date <- daily_cases %>%
         dplyr::summarise(MAX_DATE = max(.data$DATE_REPORTED)) %>%
         dplyr::pull(dplyr::all_of("MAX_DATE"))
     max_date <- max_date - abs(lag)
@@ -53,7 +53,7 @@ get_latest_info_by_country <- function(daily_cases, lag = 0) {
 #'
 #' @param daily_cases tibble: daily cases from WHO
 #' @param agg function: aggregation function. e.g. sum or mean.
-#' @param cols_sel: character vector: aggregation columns
+#' @param cols_sel character vector: aggregation columns
 #' @param days_back int: number of days back the series should extent to
 #'
 #' @returns A tibble of the daily cases aggregated
@@ -88,7 +88,7 @@ get_daily_agg <- function(daily_cases, agg = sum, cols_sel = c("NEW_CASES", "NEW
 #' Takes daily cases time series and performaing moving average smoothing
 #'
 #' @param daily_cases_ts tibble: daily cases time series (1 date per row)
-#' @param cols_used: character vector: columns to be smoothed
+#' @param cols_used character vector: columns to be smoothed
 #' @param orders int vector: order of smoothing (each element will produce a new column)
 #'
 #' @returns tibble: the daily cases time series smoothed with original columns
@@ -140,7 +140,7 @@ add_ma_smoothing <- function(daily_cases_ts, cols_used = c("NEW_CASES", "NEW_DEA
 #' Smooth columns in daily cases data
 #'
 #' @param daily_agg tibble: daily cases time series (1 date per row)
-#' @param cols_used: character vector: columns to be smoothed
+#' @param cols_used character vector: columns to be smoothed
 #' @param custom_ma_orders int vector: order of smoothing (each element will produce a new column)
 #'
 #' @returns tibble: the daily cases time series smoothed with original columns
@@ -152,8 +152,8 @@ smooth_daily_agg <- function(daily_agg, cols_used, custom_ma_orders = c()) {
     def_ma_orders <- c(7, 30, 90)
     ma_orders <- unique(c(def_ma_orders, custom_ma_orders))
 
-    daily_agg_smoothed <- daily_agg %>% 
-        dplyr::select(DATE_REPORTED, dplyr::all_of(cols_used)) %>% 
+    daily_agg_smoothed <- daily_agg %>%
+        dplyr::select(DATE_REPORTED, dplyr::all_of(cols_used)) %>%
         add_ma_smoothing(cols_used = c(cols_used), orders = ma_orders)
 
     return(daily_agg_smoothed)

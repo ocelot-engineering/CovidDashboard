@@ -8,6 +8,12 @@ overview_server(id, daily_cases, vax, population)
 }
 \arguments{
 \item{id}{string: indentifier of the function. Used as a namespace.}
+
+\item{daily_cases}{dataframe: daily cases dataset}
+
+\item{vax}{dataframe: vaccination dataset}
+
+\item{population}{dataframe: population dataset}
 }
 \description{
 Page: Overview server function

@@ -33,5 +33,8 @@ usethis::use_package("DT")
 usethis::use_package("leaflet")
 usethis::use_package("rnaturalearth")
 usethis::use_package("yaml")
+usethis::use_package("reactable")
+usethis::use_package("stringr")
+usethis::use_package("devtools")
 
 devtools::install_deps(upgrade = "ask")
