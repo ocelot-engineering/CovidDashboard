@@ -13,13 +13,13 @@ plot_all_ts_traces(
 )
 }
 \arguments{
-\item{ts_data:}{data frame: used when adding different data to an existing plot}
+\item{ts_data}{data frame: used when adding different data to an existing plot}
 
-\item{x_col:}{string: name of the x axis}
+\item{x_col}{string: name of the x axis}
 
-\item{y_cols:}{character: vector of the col names that will be added to the plot}
+\item{y_cols}{character: vector of the col names that will be added to the plot}
 
-\item{labels:}{list: e.g. \code{list(xaxis = "Date", yaxis = "Magnitude", title = "New Plot")}}
+\item{labels}{list: e.g. \code{list(xaxis = "Date", yaxis = "Magnitude", title = "New Plot")}}
 }
 \value{
 plotly plot
@@ -31,9 +31,10 @@ function with purrr. Therefore the traces need to have the same x axis.
 \examples{
 \dontrun{
 plot_all_ts_traces(
-ts_data = data.frame(), 
-x = "DATE_REPORTED", 
-y = c("NEW_CASES_MA_7DAY", "NEW_CASES_MA_90DAY") 
+ts_data = data.frame(),
+x = "DATE_REPORTED",
+y = c("NEW_CASES_MA_7DAY", "NEW_CASES_MA_90DAY")
 labels = list(yaxis = "New Cases"))
 }
+
 }

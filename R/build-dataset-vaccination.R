@@ -2,6 +2,7 @@
 # Functions to build vaccination dataset
 #
 
+#' Download and write vaccination dataset
 build_vaccination_dataset <- function() {
     url <- get_config()$datasets$vaccination$url
     url %>%
@@ -11,6 +12,7 @@ build_vaccination_dataset <- function() {
     return(invisible())
 }
 
+#' Get schema for vaccination dataset
 #' @importFrom readr cols col_date col_character col_integer col_double
 get_schema_vaccination <- function() {
     schema <- readr::cols(

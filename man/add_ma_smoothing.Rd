@@ -13,9 +13,9 @@ add_ma_smoothing(
 \arguments{
 \item{daily_cases_ts}{tibble: daily cases time series (1 date per row)}
 
-\item{orders}{int vector: order of smoothing (each element will produce a new column)}
+\item{cols_used}{character vector: columns to be smoothed}
 
-\item{cols_used:}{character vector: columns to be smoothed}
+\item{orders}{int vector: order of smoothing (each element will produce a new column)}
 }
 \value{
 tibble: the daily cases time series smoothed with original columns

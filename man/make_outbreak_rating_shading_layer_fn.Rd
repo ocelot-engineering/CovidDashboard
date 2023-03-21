@@ -28,7 +28,7 @@ time_series_plot_server(
   labels = list(yaxis = "Outbreak Rating", box_title = "Outbreak Rating", xaxis = ""),
   deselected_traces = c("OUTBREAK_RATING", "OUTBREAK_RATING_MA_30DAY", "OUTBREAK_RATING_MA_90DAY", "OUTBREAK_RATING_MA_180DAY"),
   make_outbreak_rating_shading_layer_fn( # produces the layers for background color shading
-    xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]), 
+    xmin = min(daily_outbreak_rating_ts()[["DATE_REPORTED"]]),
     xmax = max(daily_outbreak_rating_ts()[["DATE_REPORTED"]])
   )
 )

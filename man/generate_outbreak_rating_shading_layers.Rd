@@ -21,6 +21,7 @@ Generates the shading layers for the outbreak rating plot
 \dontrun{
 generate_outbreak_rating_shading_layers("2022-03-01", "2022-06-10")
 }
+
 }
 \seealso{
 \code{get_outbreak_rating_types}

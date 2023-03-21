@@ -16,9 +16,9 @@ get_daily_agg(
 
 \item{agg}{function: aggregation function. e.g. sum or mean.}
 
-\item{days_back}{int: number of days back the series should extent to}
+\item{cols_sel}{character vector: aggregation columns}
 
-\item{cols_sel:}{character vector: aggregation columns}
+\item{days_back}{int: number of days back the series should extent to}
 }
 \value{
 A tibble of the daily cases aggregated

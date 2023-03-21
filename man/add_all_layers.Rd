@@ -7,9 +7,9 @@
 add_all_layers(plt, layers)
 }
 \arguments{
-\item{plt:}{plotly: existing plot to add layers to}
+\item{plt}{plotly: existing plot to add layers to}
 
-\item{layers:}{list of functions: list of single argument functions}
+\item{layers}{list of functions: list of single argument functions}
 }
 \value{
 plotly plot

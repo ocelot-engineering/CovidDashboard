@@ -5,9 +5,9 @@
 #' Sources all files in a directory
 #'
 #' @param dir string: path of a directory
-#' @param local boolean or environment: same as `source`. TRUE, FALSE or an 
-#' environment, determining where the parsed expressions are evaluated. FALSE 
-#' (the default) corresponds to the user's workspace (the global environment) 
+#' @param local boolean or environment: same as `source`. TRUE, FALSE or an
+#' environment, determining where the parsed expressions are evaluated. FALSE
+#' (the default) corresponds to the user's workspace (the global environment)
 #' and TRUE to the environment from which source is called.
 #'
 #' @returns NULL (invisible)
@@ -16,6 +16,8 @@
 #' source_dir(dir = "./R", local = TRUE)
 #' }
 #' @seealso `source`
+#'
+#' @importFrom purrr map
 #'
 source_dir <- function(dir, local = FALSE) {
 
@@ -30,8 +32,8 @@ source_dir <- function(dir, local = FALSE) {
 
     purrr::map(
         .x = list.files(dir, full.names = TRUE, recursive = TRUE),
-        .f = source
-        , local = envir
+        .f = source,
+        local = envir
     )
 
     return(invisible())

@@ -7,7 +7,8 @@
 generate_daily_outbreak_ratings(daily_cases_w_pop)
 }
 \arguments{
-\item{daily_cases}{data frame: includes DATE_REPOTED, COUNTRY_CODE and NEW_CASES columns}
+\item{daily_cases_w_pop}{data frame: includes DATE_REPOTED, COUNTRY_CODE,
+NEW_CASES and POPULATION columns}
 }
 \value{
 tibble dataset with date, country, outbreak rating and outbreak description
@@ -22,6 +23,7 @@ population_sel <- get_population() \%>\% dplyr::select(DATE_REPORTED, COUNTRY_CO
 daily_cases_w_pop <- dplyr::left_join(daily_cases_sel, population_sel, by = c("DATE_REPORTED", "COUNTRY_CODE"))
 outbreak_ratings = generate_daily_outbreak_ratings(daily_cases_w_pop)
 }
+
 }
 \seealso{
 \code{calculate_outbreak_rating}, \code{describe_outbreak}

@@ -9,7 +9,7 @@ calculate_outbreak_rating(new_cases, population)
 \arguments{
 \item{new_cases}{numeric: number of newly reported cases}
 
-\item{population:}{numeric: population at the time of newly reported cases}
+\item{population}{numeric: population at the time of newly reported cases}
 }
 \value{
 integer between 0 and 100
@@ -21,6 +21,7 @@ Calculates the outbreak rating based on new cases to population ratio.
 \dontrun{
 outbreak_rating <- calculate_outbreak_rating(new_cases = 25, population = 100000)
 }
+
 }
 \seealso{
 \code{generate_daily_outbreak_ratings}, \code{describe_outbreak}

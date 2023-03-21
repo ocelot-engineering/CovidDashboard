@@ -19,6 +19,7 @@ Based on thresholds.
 \dontrun{
 describe_outbreak(c(0, 1, 29, 100, -1))
 }
+
 }
 \seealso{
 \code{generate_daily_outbreak_ratings}, \code{calculate_outbreak_rating}

@@ -9,9 +9,9 @@ smooth_daily_agg(daily_agg, cols_used, custom_ma_orders = c())
 \arguments{
 \item{daily_agg}{tibble: daily cases time series (1 date per row)}
 
-\item{custom_ma_orders}{int vector: order of smoothing (each element will produce a new column)}
+\item{cols_used}{character vector: columns to be smoothed}
 
-\item{cols_used:}{character vector: columns to be smoothed}
+\item{custom_ma_orders}{int vector: order of smoothing (each element will produce a new column)}
 }
 \value{
 tibble: the daily cases time series smoothed with original columns
