@@ -7,7 +7,7 @@
 #' @importFrom leaflet colorBin labelOptions highlightOptions setView addPolygons
 #' @importFrom rnaturalearth ne_countries
 #' @importFrom dplyr select left_join
-plot_world_map <- function(outbreak_ratings) {
+plot_world_map <- function(outbreak_ratings, zoom = 1) {
 
     # Get world map polygons
     world_map_polys <- rnaturalearth::ne_countries(returnclass = "sf") %>%
@@ -17,16 +17,16 @@ plot_world_map <- function(outbreak_ratings) {
     # Generate labels for each coutnry
     country_labels <- generate_map_labels(dat = world_map_polys)
 
-    # Set up color pallet
+    # Set up color palette
     bins <- c(0, seq(1, 30, length.out = 7), 100)
-    pallet <- leaflet::colorBin("YlOrRd", domain = world_map_polys[["OUTBREAK_RATING"]], bins = bins)
+    palette <- leaflet::colorBin("YlOrRd", domain = world_map_polys[["OUTBREAK_RATING"]], bins = bins)
 
     # Generate world map output
     world_map <- leaflet::leaflet() %>%
-        leaflet::setView(lng = 0, lat = 50, zoom = 1) %>%
+        leaflet::setView(lng = 0, lat = 50, zoom = zoom) %>%
         leaflet::addPolygons(
             data = world_map_polys,
-            fillColor = ~ pallet(OUTBREAK_RATING),
+            fillColor = ~ palette(OUTBREAK_RATING),
             weight = 1,
             color = "lightblue",
             opacity = 0.2,

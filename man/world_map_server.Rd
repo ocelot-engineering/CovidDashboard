@@ -4,10 +4,12 @@
 \alias{world_map_server}
 \title{Page: World map server function}
 \usage{
-world_map_server(id)
+world_map_server(id, latest_outbreak_rating_by_country)
 }
 \arguments{
 \item{id}{string: indentifier of the function. Used as a namespace.}
+
+\item{latest_outbreak_rating_by_country}{reactive dataframe}
 }
 \description{
 Page: World map server function

@@ -4,16 +4,27 @@
 \alias{overview_server}
 \title{Page: Overview server function}
 \usage{
-overview_server(id, daily_cases, vax, population)
+overview_server(
+  id,
+  daily_cases_filt,
+  vax_filt,
+  population_filt,
+  latest_rows_by_country,
+  latest_outbreak_rating_by_country
+)
 }
 \arguments{
 \item{id}{string: indentifier of the function. Used as a namespace.}
 
-\item{daily_cases}{dataframe: daily cases dataset}
+\item{daily_cases_filt}{reactive dataframe: daily cases dataset}
 
-\item{vax}{dataframe: vaccination dataset}
+\item{vax_filt}{reactive dataframe}
 
-\item{population}{dataframe: population dataset}
+\item{population_filt}{reactive dataframe: world population dataset}
+
+\item{latest_rows_by_country}{reactive dataframe}
+
+\item{latest_outbreak_rating_by_country}{reactive dataframe}
 }
 \description{
 Page: Overview server function

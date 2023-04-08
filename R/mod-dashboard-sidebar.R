@@ -34,10 +34,10 @@ sidebar_server <- function(id) {
             shinydashboard::sidebarMenu(
                 id = ns("sidebar_menu"),
                 shinydashboard::menuItem(text = "World Overview",     tabName = "overview",      icon = shiny::icon("dashboard")),
+                shinydashboard::menuItem(text = "World Map",          tabName = "world_map",     icon = shiny::icon("earth-americas")),
                 shinydashboard::menuItem(text = "News Feed",          tabName = "news_feed",     icon = shiny::icon("message")),
                 shinydashboard::menuItem(text = "Country Comparison", tabName = "country_comp",  icon = shiny::icon("chart-column")),
                 shinydashboard::menuItem(text = "Raw Data Explorer",  tabName = "data_explorer", icon = shiny::icon("table")),
-                shinydashboard::menuItem(text = "World Map",          tabName = "world_map",     icon = shiny::icon("earth-americas")),
                 shinydashboard::menuItem(text = "Simulations",        tabName = "simulations",   icon = shiny::icon("circle-nodes")),
                 shinydashboard::menuItem(text = "Resources",          tabName = "resources",     icon = shiny::icon("book"),
                         shinydashboard::menuSubItem(text = "Vaccines",     tabName = "vaccines",     icon = shiny::icon("syringe")),

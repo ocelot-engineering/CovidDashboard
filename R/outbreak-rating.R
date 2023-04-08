@@ -15,6 +15,16 @@
 #  what it is, which is the new cases to population ratio, rather than risk of
 #  spread or risk of death.
 #
+# TODO: historical population is available from OECD
+# this is a mid-year estimate of the total population.
+# will assume linear growth to impute data to a daily level.
+# e.g. Country X has a population of 20 in 2019 and 30 and 2020.
+#      this means July 1st 2019 the population is 20, July 1st 2020
+#      the population is 30, and January 1st 2020 the population is
+#      25, (from (30 - 20) / 365 *( 365/2 ) ) . This means spikes in
+#      population (from mass refugee immigration for example), will
+#      not be captured at a fine grain level.
+#
 
 
 #' Generates a dataset including daily outbreak ratings.

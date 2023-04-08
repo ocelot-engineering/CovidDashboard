@@ -135,6 +135,20 @@ calc_new_and_total <- function(daily_cases, new_col, total_col) {
 }
 
 
-calc_vax <- function() {
-    # TODO: latest vax numbers
+#' Calculate latest vaccination figures
+#' @importFrom dplyr filter summarise
+calc_vax <- function(vax_filt) {
+    latest_vax <- vax_filt %>%
+        dplyr::filter(.data$DATA_SOURCE == "REPORTING") %>%
+        dplyr::summarise(
+            PERSONS_FULLY_VACCINATED = sum(.data$PERSONS_FULLY_VACCINATED, na.rm = TRUE),
+            TOTAL_VACCINATIONS = sum(.data$TOTAL_VACCINATIONS, na.rm = TRUE)
+        )
+
+    output <- list(
+        persons_fully_vaxxed = latest_vax$PERSONS_FULLY_VACCINATED,
+        total_vax_given = latest_vax$TOTAL_VACCINATIONS
+    )
+
+    return(output)
 }

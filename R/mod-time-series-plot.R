@@ -42,7 +42,6 @@ time_series_plot_ui <- function(id, show_dropdown = TRUE, collapsible = TRUE, ..
 time_series_plot_server <- function(id, ts_data, labels = list(yaxis = "", box_title = ""), deselected_traces = c(), ...) {
 
     module <- function(input, output, session) {
-
         # Data -----------------------------------------------------------------
 
         # Select-able lines for the plot
@@ -95,7 +94,6 @@ time_series_plot_server <- function(id, ts_data, labels = list(yaxis = "", box_t
         output$plot_time_series <- plotly::renderPlotly(expr = {
             shiny::req(ts_data())
             shiny::req(y_cols())
-            shiny::req(y_deselected_cols())
 
             plot_all_ts_traces(
                 ts_data       = ts_data(),

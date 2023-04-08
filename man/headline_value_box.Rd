@@ -8,6 +8,7 @@ headline_value_box(
   subtitle,
   new_cases,
   total_cases,
+  total_suffix = "in total",
   perc_inc,
   icon,
   color = "light-blue"

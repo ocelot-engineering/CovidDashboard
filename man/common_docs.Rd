@@ -11,11 +11,21 @@ An object of class \code{NULL} of length 0.
 common_docs
 }
 \arguments{
-\item{daily_cases}{tibble: daily cases from WHO}
+\item{daily_cases}{dataframe: daily cases from WHO}
 
-\item{vax}{TODO}
+\item{vax}{dataframe}
 
-\item{population}{TODO}
+\item{population}{dataframe}
+
+\item{daily_cases_filt}{reactive dataframe: daily cases dataset}
+
+\item{vax_filt}{reactive dataframe}
+
+\item{population_filt}{reactive dataframe: world population dataset}
+
+\item{latest_rows_by_country}{reactive dataframe}
+
+\item{latest_outbreak_rating_by_country}{reactive dataframe}
 }
 \description{
 Common documentation

@@ -2,4 +2,4 @@
 
 R -e "devtools::install_deps()"
 
-Rscript ./docker/data_pipeline.R
+Rscript ./dev/run-data-pipeline.R

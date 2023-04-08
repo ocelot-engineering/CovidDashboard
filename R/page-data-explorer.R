@@ -8,10 +8,7 @@
 #' @inherit module_docs params
 data_explorer_ui <- function(id) {
     ns <- shiny::NS(id)
-
-    data_explorer <- shiny::fluidPage(
-        shiny::fluidRow(shiny::div("TEST", class = "top-padding"))
-    )
+    data_explorer <- under_construction_ui(id = ns("under_construction"))
 
     return(data_explorer)
 }
@@ -23,39 +20,10 @@ data_explorer_ui <- function(id) {
 #'
 #' @importFrom dplyr slice_head
 #'
-data_explorer_server <- function(id, daily_cases, vax, population) {
+data_explorer_server <- function(id) {
 
     module <- function(input, output, session) {
-        ns <- session$ns
-
-        output$daily_cases <- DT::renderDataTable({
-            aaa = daily_cases %>% dplyr::slice_head(n = 50)
-            # browser()
-            DT::datatable(
-                data = aaa, 
-                # options = list(lengthMenu = c(5, 30, 50), pageLength = 5),
-                style = "bootstrap4",
-                editable = FALSE,
-            )
-        }, server = TRUE)
-
-        # output$vax <- DT::renderDataTable({
-        #     DT::datatable(
-        #         data = vax, 
-        #         # options = list(lengthMenu = c(5, 30, 50), pageLength = 5),
-        #         style = "bootstrap4",
-        #         editable = FALSE
-        #     )
-        # })
-        # 
-        # output$population <- DT::renderDataTable({
-        #     DT::datatable(
-        #         data = population, 
-        #         # options = list(lengthMenu = c(5, 30, 50), pageLength = 5),
-        #         style = "bootstrap4",
-        #         editable = FALSE
-        #     )
-        # })
+        under_construction_server(id = "under_construction")
     }
 
     return(shiny::moduleServer(id, module))

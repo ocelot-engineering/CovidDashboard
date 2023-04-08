@@ -9,11 +9,11 @@ body_server(id, daily_cases, vax, population)
 \arguments{
 \item{id}{string: indentifier of the function. Used as a namespace.}
 
-\item{daily_cases}{tibble: daily cases from WHO}
+\item{daily_cases}{dataframe: daily cases from WHO}
 
-\item{vax}{TODO}
+\item{vax}{dataframe}
 
-\item{population}{TODO}
+\item{population}{dataframe}
 }
 \description{
 Dashboard body server function

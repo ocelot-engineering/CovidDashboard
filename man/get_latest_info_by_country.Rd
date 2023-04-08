@@ -7,7 +7,7 @@
 get_latest_info_by_country(daily_cases, lag = 0)
 }
 \arguments{
-\item{daily_cases}{tibble: daily cases from WHO}
+\item{daily_cases}{dataframe: daily cases from WHO}
 
 \item{lag}{int: number of days back the latest info should be lagged. I.e. 1
 day back will give the latest info as if running yesterday. Can be positive

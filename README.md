@@ -9,12 +9,22 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-![Screenshot of dashboard](inst/images/snapshot-sm.png)
-
 The purpose of this application is to provide users with an up-to-date
 view of the worldwide Covid-19 situation. It provides useful metrics to
 assist in decision making for those who reside or intend to visit
 countries impacted by Covid-19.
+
+## Overview Page
+
+![Screenshot of dashboard](inst/images/snapshot-sm.png)
+
+![Screenshot of dashboard](inst/images/outbreak-rating-example.png)
+
+![Screenshot of dashboard](inst/images/map-example.png)
+
+## Map Page
+
+![Screenshot of dashboard](inst/images/map-page-sm.png)
 
 ## Data
 
@@ -85,15 +95,6 @@ TODO - details about git actions and docker TODO - testing
     ├── NAMESPACE                  <- Function imports and exports of the package
     ├── README.md                  <- The top-level README for developers using this project (do not edit)
     └── README.rmd                 <- The top-level README for developers using this project (do edit)
-
-### Adding features
-
-TODO - pages, components, functions, modules, scripts, tests, queries
-TODO - less dependencies the better
-
-### Developing outside of the Shiny framework
-
-TODO
 
 ### Conforming to existing codebase
 
